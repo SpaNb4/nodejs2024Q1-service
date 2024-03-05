@@ -1,9 +1,11 @@
 import { Artist } from 'src/artist/entities/artist.entity';
+import { Track } from 'src/track/entities/track.entity';
 import { User } from 'src/user/entities/user.entity';
 
 interface Database {
   users: User[];
   artists: Artist[];
+  tracks: Track[];
 }
 
 export const db: Database = {
@@ -50,4 +52,5 @@ export const db: Database = {
     },
   ],
   artists: [],
+  tracks: [],
 };
