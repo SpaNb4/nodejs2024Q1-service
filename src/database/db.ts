@@ -1,7 +1,9 @@
+import { Artist } from 'src/artist/entities/artist.entity';
 import { User } from 'src/user/entities/user.entity';
 
 interface Database {
   users: User[];
+  artists: Artist[];
 }
 
 export const db: Database = {
@@ -47,4 +49,5 @@ export const db: Database = {
       updatedAt: Date.now(),
     },
   ],
+  artists: [],
 };

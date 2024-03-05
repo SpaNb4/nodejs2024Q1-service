@@ -40,8 +40,8 @@ export class UserController {
       return;
     }
 
-    const user = this.userService.create(createUserDto);
-    const { password, ...userWithoutPassword } = user;
+    const createdUser = this.userService.create(createUserDto);
+    const { password, ...userWithoutPassword } = createdUser;
 
     res.status(StatusCodes.CREATED).json(userWithoutPassword);
   }
@@ -62,12 +62,12 @@ export class UserController {
       return;
     }
 
-    if (!this.userService.findOne(id)) {
+    const user = this.userService.findOne(id);
+
+    if (!user) {
       res.status(StatusCodes.NOT_FOUND).json({ error: 'User not found' });
       return;
     }
-
-    const user = this.userService.findOne(id);
 
     res.status(StatusCodes.OK).json(user);
   }

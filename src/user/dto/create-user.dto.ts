@@ -1,4 +1,3 @@
-export interface CreateUserDto {
-  login: string;
-  password: string;
-}
+import { User } from '../entities/user.entity';
+
+export type CreateUserDto = Pick<User, 'login' | 'password'>;
