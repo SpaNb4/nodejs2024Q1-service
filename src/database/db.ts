@@ -1,3 +1,4 @@
+import { Album } from 'src/album/entities/album.entity';
 import { Artist } from 'src/artist/entities/artist.entity';
 import { Track } from 'src/track/entities/track.entity';
 import { User } from 'src/user/entities/user.entity';
@@ -6,6 +7,7 @@ interface Database {
   users: User[];
   artists: Artist[];
   tracks: Track[];
+  albums: Album[];
 }
 
 export const db: Database = {
@@ -53,4 +55,12 @@ export const db: Database = {
   ],
   artists: [],
   tracks: [],
+  albums: [
+    {
+      id: 'f4b3b3e3-3b6e-4f3d-8f6e-6e3d4f3b3b4f',
+      name: 'The Dark Side of the Moon',
+      year: 1973,
+      artistId: null,
+    },
+  ],
 };

@@ -36,7 +36,7 @@ export class UserController {
     if (!createUserDto.login || !createUserDto.password) {
       res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ error: 'Invalid request, login and password are required' });
+        .json({ error: 'Invalid request, login, and password are required' });
       return;
     }
 
@@ -87,7 +87,7 @@ export class UserController {
 
     if (!updatePasswordDto.newPassword || !updatePasswordDto.oldPassword) {
       res.status(StatusCodes.BAD_REQUEST).json({
-        error: 'Invalid request, new password and old password are required',
+        error: 'Invalid request, new password, and old password are required',
       });
       return;
     }

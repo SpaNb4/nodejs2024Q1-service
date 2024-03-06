@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  Patch,
   Post,
   Put,
   Res,
@@ -29,7 +28,7 @@ export class TrackController {
     ) {
       res.status(StatusCodes.BAD_REQUEST).json({
         error:
-          'Invalid request, name, artistId, albumId and duration are required',
+          'Invalid request, name, artistId, albumId, and duration are required',
       });
       return;
     }
@@ -86,7 +85,7 @@ export class TrackController {
     ) {
       res.status(StatusCodes.BAD_REQUEST).json({
         error:
-          'Invalid request, name, artistId, albumId and duration are required',
+          'Invalid request, name, artistId, albumId, and duration are required',
       });
       return;
     }

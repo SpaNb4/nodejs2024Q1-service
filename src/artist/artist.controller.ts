@@ -23,7 +23,7 @@ export class ArtistController {
     if (!createArtistDto.name || !createArtistDto.grammy) {
       res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ error: 'Invalid request, name and grammy are required' });
+        .json({ error: 'Invalid request, name, and grammy are required' });
       return;
     }
 
