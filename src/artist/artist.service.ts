@@ -37,5 +37,19 @@ export class ArtistService {
     const artistIndex = db.artists.findIndex((artist) => artist.id === id);
 
     db.artists.splice(artistIndex, 1);
+
+    // TODO find a better way to handle this
+    const artistAlbums = db.albums.filter((album) => album.artistId === id);
+
+    artistAlbums.forEach((album) => {
+      album.artistId = null;
+    });
+
+    const artistTracks = db.tracks.filter((track) => track.artistId === id);
+
+    artistTracks.forEach((track) => {
+      track.artistId = null;
+    });
+    //
   }
 }

@@ -9,7 +9,6 @@ import {
   Res,
 } from '@nestjs/common';
 import { StatusCodes } from 'http-status-codes';
-import { TrackService } from 'src/track/track.service';
 import { validate } from 'uuid';
 import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
@@ -17,10 +16,7 @@ import { UpdateAlbumDto } from './dto/update-album.dto';
 
 @Controller('album')
 export class AlbumController {
-  constructor(
-    private readonly albumService: AlbumService,
-    private readonly trackService: TrackService,
-  ) {}
+  constructor(private readonly albumService: AlbumService) {}
 
   @Post()
   create(@Body() createAlbumDto: CreateAlbumDto, @Res() res) {
@@ -118,15 +114,6 @@ export class AlbumController {
       res.status(StatusCodes.NOT_FOUND).json({ error: 'Album not found' });
       return;
     }
-
-    // TODO find a better way to handle this
-    const tracks = this.trackService.findAll();
-    const albumTracks = tracks.filter((track) => track.albumId === id);
-
-    albumTracks.forEach((track) => {
-      track.albumId = null;
-    });
-    //
 
     this.albumService.remove(id);
 

@@ -71,6 +71,18 @@ export class ArtistController {
       return;
     }
 
+    if (
+      !updateArtistDto.name ||
+      updateArtistDto.grammy === undefined ||
+      typeof updateArtistDto.name !== 'string' ||
+      typeof updateArtistDto.grammy !== 'boolean'
+    ) {
+      res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ error: 'Invalid request, name, and grammy is required' });
+      return;
+    }
+
     if (!this.artistService.findOne(id)) {
       res.status(StatusCodes.NOT_FOUND).json({ error: 'Artist not found' });
       return;
