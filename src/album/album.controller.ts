@@ -79,7 +79,7 @@ export class AlbumController {
       return;
     }
 
-    // TODO validate types
+    // TODO validate types using class validator?
     if (
       !updateAlbumDto.name ||
       typeof updateAlbumDto.name !== 'string' ||

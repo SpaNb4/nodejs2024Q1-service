@@ -41,6 +41,7 @@ export class UserController {
     }
 
     const createdUser = this.userService.create(createUserDto);
+    // TODO find a better way to handle this
     const { password, ...userWithoutPassword } = createdUser;
 
     res.status(StatusCodes.CREATED).json(userWithoutPassword);
@@ -107,6 +108,7 @@ export class UserController {
     }
 
     const updatedUser = this.userService.update(id, updatePasswordDto);
+    // TODO find a better way to handle this
     const { password, ...userWithoutPassword } = updatedUser;
 
     res.status(StatusCodes.OK).json(userWithoutPassword);
