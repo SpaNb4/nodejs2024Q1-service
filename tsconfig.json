@@ -19,5 +19,5 @@
     "noFallthroughCasesInSwitch": false,
     "resolveJsonModule": true
   },
-  "include": ["src/**/*.ts", "doc/openapi.json"]
+  "include": ["src/**/*.ts"]
 }
