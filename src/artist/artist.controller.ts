@@ -105,7 +105,7 @@ export class ArtistController {
       return;
     }
 
-    this.artistService.remove(id);
+    this.artistService.removeArtist(id);
 
     res.status(StatusCodes.NO_CONTENT).send();
   }

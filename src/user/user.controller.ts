@@ -107,7 +107,7 @@ export class UserController {
       return;
     }
 
-    const updatedUser = this.userService.update(id, updatePasswordDto);
+    const updatedUser = this.userService.updatePassword(id, updatePasswordDto);
     // TODO find a better way to handle this
     const { password, ...userWithoutPassword } = updatedUser;
 

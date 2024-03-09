@@ -1,25 +1,35 @@
 import { Injectable } from '@nestjs/common';
-import { db } from 'src/database/db';
-// import { UpdateFavoriteDto } from './dto/update-favorite.dto';
+import { AlbumService } from 'src/album/album.service';
+import { ArtistService } from 'src/artist/artist.service';
+import { TrackService } from 'src/track/track.service';
+import { Favorites } from './entities/favorite.entity';
 
 @Injectable()
 export class FavoritesService {
-  findAll() {
-    const favoritesArtistsIds = db.favorites.artists;
-    const favoritesAlbumsIds = db.favorites.albums;
-    const favoritesTracksIds = db.favorites.tracks;
+  private favorites: Favorites = {
+    artists: [],
+    albums: [],
+    tracks: [],
+  };
 
-    const artists = db.artists.filter((artist) =>
-      favoritesArtistsIds.includes(artist.id),
-    );
+  constructor(
+    private readonly artistService: ArtistService,
+    private readonly albumService: AlbumService,
+    private readonly trackService: TrackService,
+  ) {}
 
-    const albums = db.albums.filter((album) =>
-      favoritesAlbumsIds.includes(album.id),
-    );
+  getFavorites() {
+    const artists = this.artistService
+      .findAll()
+      .filter((artist) => this.favorites.artists.includes(artist.id));
 
-    const tracks = db.tracks.filter((track) =>
-      favoritesTracksIds.includes(track.id),
-    );
+    const albums = this.albumService
+      .findAll()
+      .filter((album) => this.favorites.albums.includes(album.id));
+
+    const tracks = this.trackService
+      .findAll()
+      .filter((track) => this.favorites.tracks.includes(track.id));
 
     return {
       artists,
@@ -29,38 +39,38 @@ export class FavoritesService {
   }
 
   addTrackToFavorite(id: string) {
-    db.favorites.tracks.push(id);
+    this.favorites.tracks.push(id);
   }
 
   addAlbumToFavorite(id: string) {
-    db.favorites.albums.push(id);
+    this.favorites.albums.push(id);
   }
 
   addArtistToFavorite(id: string) {
-    db.favorites.artists.push(id);
+    this.favorites.artists.push(id);
   }
 
   removeTrackFromFavorite(id: string) {
-    const index = db.favorites.tracks.indexOf(id);
+    const index = this.favorites.tracks.indexOf(id);
 
     if (index > -1) {
-      db.favorites.tracks.splice(index, 1);
+      this.favorites.tracks.splice(index, 1);
     }
   }
 
   removeAlbumFromFavorite(id: string) {
-    const index = db.favorites.albums.indexOf(id);
+    const index = this.favorites.albums.indexOf(id);
 
     if (index > -1) {
-      db.favorites.albums.splice(index, 1);
+      this.favorites.albums.splice(index, 1);
     }
   }
 
   removeArtistFromFavorite(id: string) {
-    const index = db.favorites.artists.indexOf(id);
+    const index = this.favorites.artists.indexOf(id);
 
     if (index > -1) {
-      db.favorites.artists.splice(index, 1);
+      this.favorites.artists.splice(index, 1);
     }
   }
 }

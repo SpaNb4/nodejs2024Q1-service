@@ -1,49 +1,23 @@
 import { Injectable } from '@nestjs/common';
-import { db } from 'src/database/db';
-import { v4 as uuidv4 } from 'uuid';
-import { CreateAlbumDto } from './dto/create-album.dto';
-import { UpdateAlbumDto } from './dto/update-album.dto';
+import { DatabaseService } from 'src/database/database.service';
+import { TrackService } from 'src/track/track.service';
+import { Album } from './entities/album.entity';
 
 @Injectable()
-export class AlbumService {
-  create(createAlbumDto: CreateAlbumDto) {
-    const album = {
-      id: uuidv4(),
-      ...createAlbumDto,
-    };
-
-    db.albums.push(album);
-
-    return album;
+export class AlbumService extends DatabaseService<Album> {
+  constructor(private readonly trackService: TrackService) {
+    super();
   }
 
-  findAll() {
-    return db.albums;
-  }
+  removeAlbum(id: string) {
+    super.remove(id);
 
-  findOne(id: string) {
-    return db.albums.find((album) => album.id === id);
-  }
-
-  update(id: string, updateAlbumDto: UpdateAlbumDto) {
-    const album = this.findOne(id);
-
-    Object.assign(album, updateAlbumDto);
-
-    return album;
-  }
-
-  remove(id: string) {
-    const albumIndex = db.albums.findIndex((album) => album.id === id);
-
-    db.albums.splice(albumIndex, 1);
-
-    // TODO find a better way to handle this
-    const albumTracks = db.tracks.filter((track) => track.albumId === id);
+    const albumTracks = this.trackService
+      .findAll()
+      .filter((track) => track.albumId === id);
 
     albumTracks.forEach((track) => {
       track.albumId = null;
     });
-    //
   }
 }

@@ -1,55 +1,36 @@
 import { Injectable } from '@nestjs/common';
-import { db } from 'src/database/db';
-import { v4 as uuidv4 } from 'uuid';
-import { CreateArtistDto } from './dto/create-artist.dto';
-import { UpdateArtistDto } from './dto/update-artist.dto';
+import { AlbumService } from 'src/album/album.service';
+import { DatabaseService } from 'src/database/database.service';
+
+import { TrackService } from 'src/track/track.service';
+import { Artist } from './entities/artist.entity';
 
 @Injectable()
-export class ArtistService {
-  create(createArtistDto: CreateArtistDto) {
-    const artist = {
-      id: uuidv4(),
-      ...createArtistDto,
-    };
-
-    db.artists.push(artist);
-
-    return artist;
+export class ArtistService extends DatabaseService<Artist> {
+  constructor(
+    private readonly albumService: TrackService,
+    private readonly trackService: AlbumService,
+  ) {
+    super();
   }
 
-  findAll() {
-    return db.artists;
-  }
+  removeArtist(id: string) {
+    super.remove(id);
 
-  findOne(id: string) {
-    return db.artists.find((artist) => artist.id === id);
-  }
-
-  update(id: string, updateArtistDto: UpdateArtistDto) {
-    const artist = this.findOne(id);
-
-    Object.assign(artist, updateArtistDto);
-
-    return artist;
-  }
-
-  remove(id: string) {
-    const artistIndex = db.artists.findIndex((artist) => artist.id === id);
-
-    db.artists.splice(artistIndex, 1);
-
-    // TODO find a better way to handle this
-    const artistAlbums = db.albums.filter((album) => album.artistId === id);
+    const artistAlbums = this.albumService
+      .findAll()
+      .filter((album) => album.artistId === id);
 
     artistAlbums.forEach((album) => {
       album.artistId = null;
     });
 
-    const artistTracks = db.tracks.filter((track) => track.artistId === id);
+    const artistTracks = this.trackService
+      .findAll()
+      .filter((track) => track.artistId === id);
 
     artistTracks.forEach((track) => {
       track.artistId = null;
     });
-    //
   }
 }

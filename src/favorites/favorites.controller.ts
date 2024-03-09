@@ -17,7 +17,7 @@ export class FavoritesController {
 
   @Get()
   findAll() {
-    return this.favoritesService.findAll();
+    return this.favoritesService.getFavorites();
   }
 
   @Post('track/:id')

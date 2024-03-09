@@ -113,7 +113,7 @@ export class AlbumController {
       return;
     }
 
-    this.albumService.remove(id);
+    this.albumService.removeAlbum(id);
 
     res.status(StatusCodes.NO_CONTENT).send();
   }
