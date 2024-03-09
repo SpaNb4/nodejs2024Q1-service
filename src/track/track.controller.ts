@@ -81,7 +81,7 @@ export class TrackController {
       !updateTrackDto.name ||
       updateTrackDto.artistId === undefined ||
       updateTrackDto.albumId === undefined ||
-      !updateTrackDto.duration
+      updateTrackDto.duration === undefined
     ) {
       res.status(StatusCodes.BAD_REQUEST).json({
         error:

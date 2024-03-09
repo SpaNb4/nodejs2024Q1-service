@@ -77,9 +77,7 @@ export class AlbumController {
 
     // TODO validate types using class validator?
     if (
-      !updateAlbumDto.name ||
       typeof updateAlbumDto.name !== 'string' ||
-      !updateAlbumDto.year ||
       typeof updateAlbumDto.year !== 'number' ||
       updateAlbumDto.artistId === undefined
     ) {

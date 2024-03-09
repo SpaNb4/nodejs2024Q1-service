@@ -72,8 +72,6 @@ export class ArtistController {
     }
 
     if (
-      !updateArtistDto.name ||
-      updateArtistDto.grammy === undefined ||
       typeof updateArtistDto.name !== 'string' ||
       typeof updateArtistDto.grammy !== 'boolean'
     ) {
