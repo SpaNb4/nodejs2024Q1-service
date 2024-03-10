@@ -3,14 +3,14 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  NotFoundException,
   Param,
   ParseUUIDPipe,
   Post,
   Put,
-  Res,
 } from '@nestjs/common';
 import { StatusCodes } from 'http-status-codes';
-import { validate } from 'uuid';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { TrackService } from './track.service';
@@ -20,82 +20,49 @@ export class TrackController {
   constructor(private readonly trackService: TrackService) {}
 
   @Post()
-  create(@Body() createTrackDto: CreateTrackDto, @Res() res) {
-    if (
-      !createTrackDto.name ||
-      createTrackDto.artistId === undefined ||
-      createTrackDto.albumId === undefined ||
-      !createTrackDto.duration
-    ) {
-      res.status(StatusCodes.BAD_REQUEST).json({
-        error:
-          'Invalid request, name, artistId, albumId, and duration are required',
-      });
-      return;
-    }
-
-    const createdTrack = this.trackService.create(createTrackDto);
-
-    res.status(StatusCodes.CREATED).json(createdTrack);
+  create(@Body() createTrackDto: CreateTrackDto) {
+    return this.trackService.create(createTrackDto);
   }
 
   @Get()
-  findAll(@Res() res) {
-    const tracks = this.trackService.findAll();
-
-    res.status(StatusCodes.OK).json(tracks);
+  findAll() {
+    return this.trackService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseUUIDPipe) id: string, @Res() res) {
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
     const track = this.trackService.findOne(id);
 
     if (!track) {
-      res.status(StatusCodes.NOT_FOUND).json({ error: 'Track not found' });
-      return;
+      throw new NotFoundException('Track not found');
     }
 
-    res.status(StatusCodes.OK).json(track);
+    return track;
   }
 
   @Put(':id')
   update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateTrackDto: UpdateTrackDto,
-    @Res() res,
   ) {
-    if (
-      !updateTrackDto.name ||
-      updateTrackDto.artistId === undefined ||
-      updateTrackDto.albumId === undefined ||
-      updateTrackDto.duration === undefined
-    ) {
-      res.status(StatusCodes.BAD_REQUEST).json({
-        error:
-          'Invalid request, name, artistId, albumId, and duration are required',
-      });
-      return;
+    const track = this.trackService.findOne(id);
+
+    if (!track) {
+      throw new NotFoundException('Track not found');
     }
 
-    if (!this.trackService.findOne(id)) {
-      res.status(StatusCodes.NOT_FOUND).json({ error: 'Track not found' });
-      return;
-    }
-
-    const updatedTrack = this.trackService.update(id, updateTrackDto);
-
-    res.status(StatusCodes.OK).json(updatedTrack);
+    return this.trackService.update(id, updateTrackDto);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseUUIDPipe) id: string, @Res() res) {
-    if (!this.trackService.findOne(id)) {
-      res.status(StatusCodes.NOT_FOUND).json({ error: 'Track not found' });
-      return;
+  @HttpCode(StatusCodes.NO_CONTENT)
+  remove(@Param('id', ParseUUIDPipe) id: string) {
+    const track = this.trackService.findOne(id);
+
+    if (!track) {
+      throw new NotFoundException('Track not found');
     }
 
     this.trackService.remove(id);
-
-    res.status(StatusCodes.NO_CONTENT).send();
   }
 }

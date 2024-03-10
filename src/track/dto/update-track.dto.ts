@@ -1,3 +1,3 @@
 import { CreateTrackDto } from './create-track.dto';
 
-export type UpdateTrackDto = CreateTrackDto;
+export class UpdateTrackDto extends CreateTrackDto {}

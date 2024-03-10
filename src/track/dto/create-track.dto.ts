@@ -1,3 +1,4 @@
+import { OmitType } from '@nestjs/mapped-types';
 import { Track } from '../entities/track.entity';
 
-export type CreateTrackDto = Omit<Track, 'id'>;
+export class CreateTrackDto extends OmitType(Track, ['id'] as const) {}
