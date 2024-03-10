@@ -1,27 +1,29 @@
 import { IsInt, IsNotEmpty, IsString, IsUUID } from 'class-validator';
 import { IsNullable } from 'src/validators/is-nullable';
 
+const invalidRequestMessage =
+  'Invalid request, name, year, and artistId are required';
+
 export class Album {
   @IsUUID(4)
-  @IsNotEmpty()
   id: string;
 
   @IsString()
   @IsNotEmpty({
-    message: 'Invalid request, name, year, and artistId are required',
+    message: invalidRequestMessage,
   })
   name: string;
 
   @IsInt()
   @IsNotEmpty({
-    message: 'Invalid request, name, year, and artistId are required',
+    message: invalidRequestMessage,
   })
   year: number;
 
   @IsUUID(4)
   @IsNullable()
   @IsNotEmpty({
-    message: 'Invalid request, name, year, and artistId are required',
+    message: invalidRequestMessage,
   })
   artistId: string | null;
 }

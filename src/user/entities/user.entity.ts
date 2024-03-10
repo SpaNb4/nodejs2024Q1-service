@@ -1,31 +1,29 @@
 import { IsInt, IsNotEmpty, IsString, IsUUID, Min } from 'class-validator';
 
+const invalidRequestMessage = 'Invalid request, login, password are required';
+
 export class User {
   @IsUUID(4)
-  @IsNotEmpty()
   id: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: invalidRequestMessage })
   login: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: invalidRequestMessage })
   // TODO
   // @Exclude({ toPlainOnly: true })
   password: string;
 
   @IsInt()
   @Min(1)
-  @IsNotEmpty()
   version: number;
 
   @IsInt()
-  @IsNotEmpty()
   createdAt: number;
 
   @IsInt()
-  @IsNotEmpty()
   updatedAt: number;
 
   // TODO
