@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
   Res,
@@ -46,14 +47,7 @@ export class TrackController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string, @Res() res) {
-    if (!validate(id)) {
-      res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ error: 'Invalid id format provided, must be UUID' });
-      return;
-    }
-
+  findOne(@Param('id', ParseUUIDPipe) id: string, @Res() res) {
     const track = this.trackService.findOne(id);
 
     if (!track) {
@@ -66,17 +60,10 @@ export class TrackController {
 
   @Put(':id')
   update(
-    @Param('id') id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() updateTrackDto: UpdateTrackDto,
     @Res() res,
   ) {
-    if (!validate(id)) {
-      res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ error: 'Invalid id format provided, must be UUID' });
-      return;
-    }
-
     if (
       !updateTrackDto.name ||
       updateTrackDto.artistId === undefined ||
@@ -101,14 +88,7 @@ export class TrackController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string, @Res() res) {
-    if (!validate(id)) {
-      res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ error: 'Invalid id format provided, must be UUID' });
-      return;
-    }
-
+  remove(@Param('id', ParseUUIDPipe) id: string, @Res() res) {
     if (!this.trackService.findOne(id)) {
       res.status(StatusCodes.NOT_FOUND).json({ error: 'Track not found' });
       return;

@@ -4,12 +4,12 @@ import {
   Delete,
   Get,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
   Res,
 } from '@nestjs/common';
 import { StatusCodes } from 'http-status-codes';
-import { validate } from 'uuid';
 import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
@@ -44,14 +44,7 @@ export class AlbumController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string, @Res() res) {
-    if (!validate(id)) {
-      res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ error: 'Invalid id format provided, must be UUID' });
-      return;
-    }
-
+  findOne(@Param('id', ParseUUIDPipe) id: string, @Res() res) {
     const album = this.albumService.findOne(id);
 
     if (!album) {
@@ -64,17 +57,10 @@ export class AlbumController {
 
   @Put(':id')
   update(
-    @Param('id') id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() updateAlbumDto: UpdateAlbumDto,
     @Res() res,
   ) {
-    if (!validate(id)) {
-      res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ error: 'Invalid id format provided, must be UUID' });
-      return;
-    }
-
     // TODO validate types using class validator?
     if (
       typeof updateAlbumDto.name !== 'string' ||
@@ -98,14 +84,7 @@ export class AlbumController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string, @Res() res) {
-    if (!validate(id)) {
-      res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ error: 'Invalid id format provided, must be UUID' });
-      return;
-    }
-
+  remove(@Param('id', ParseUUIDPipe) id: string, @Res() res) {
     const album = this.albumService.findOne(id);
 
     if (!album) {

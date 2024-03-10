@@ -1,3 +1,4 @@
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule } from '@nestjs/swagger';
 import * as fs from 'node:fs/promises';
@@ -11,6 +12,7 @@ const port = process.env.PORT || 4000;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.useGlobalPipes(new ValidationPipe());
 
   const file = await fs.readFile(
     path.join(__dirname, '../doc/api.yaml'),

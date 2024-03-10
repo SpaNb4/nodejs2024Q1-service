@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
   Res,
@@ -40,14 +41,7 @@ export class ArtistController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string, @Res() res) {
-    if (!validate(id)) {
-      res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ error: 'Invalid id format provided, must be UUID' });
-      return;
-    }
-
+  findOne(@Param('id', ParseUUIDPipe) id: string, @Res() res) {
     const artist = this.artistService.findOne(id);
 
     if (!artist) {
@@ -60,17 +54,10 @@ export class ArtistController {
 
   @Put(':id')
   update(
-    @Param('id') id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() updateArtistDto: UpdateArtistDto,
     @Res() res,
   ) {
-    if (!validate(id)) {
-      res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ error: 'Invalid id format provided, must be UUID' });
-      return;
-    }
-
     if (
       typeof updateArtistDto.name !== 'string' ||
       typeof updateArtistDto.grammy !== 'boolean'
@@ -92,14 +79,7 @@ export class ArtistController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string, @Res() res) {
-    if (!validate(id)) {
-      res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ error: 'Invalid id format provided, must be UUID' });
-      return;
-    }
-
+  remove(@Param('id', ParseUUIDPipe) id: string, @Res() res) {
     if (!this.artistService.findOne(id)) {
       res.status(StatusCodes.NOT_FOUND).json({ error: 'Artist not found' });
       return;

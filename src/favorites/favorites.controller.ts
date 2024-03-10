@@ -1,4 +1,12 @@
-import { Controller, Delete, Get, Param, Post, Res } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  Res,
+} from '@nestjs/common';
 import { StatusCodes } from 'http-status-codes';
 import { AlbumService } from 'src/album/album.service';
 import { ArtistService } from 'src/artist/artist.service';
@@ -21,14 +29,7 @@ export class FavoritesController {
   }
 
   @Post('track/:id')
-  addTrackToFavorite(@Param('id') id: string, @Res() res) {
-    if (!validate(id)) {
-      res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ error: 'Invalid id format provided, must be UUID' });
-      return;
-    }
-
+  addTrackToFavorite(@Param('id', ParseUUIDPipe) id: string, @Res() res) {
     if (!this.trackService.findOne(id)) {
       res
         .status(StatusCodes.UNPROCESSABLE_ENTITY)
@@ -42,7 +43,7 @@ export class FavoritesController {
   }
 
   @Post('album/:id')
-  addAlbumToFavorite(@Param('id') id: string, @Res() res) {
+  addAlbumToFavorite(@Param('id', ParseUUIDPipe) id: string, @Res() res) {
     if (!validate(id)) {
       res
         .status(StatusCodes.BAD_REQUEST)
@@ -63,14 +64,7 @@ export class FavoritesController {
   }
 
   @Post('artist/:id')
-  addArtistToFavorite(@Param('id') id: string, @Res() res) {
-    if (!validate(id)) {
-      res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ error: 'Invalid id format provided, must be UUID' });
-      return;
-    }
-
+  addArtistToFavorite(@Param('id', ParseUUIDPipe) id: string, @Res() res) {
     if (!this.artistService.findOne(id)) {
       res
         .status(StatusCodes.UNPROCESSABLE_ENTITY)
@@ -84,14 +78,7 @@ export class FavoritesController {
   }
 
   @Delete('track/:id')
-  removeTrackFromFavorite(@Param('id') id: string, @Res() res) {
-    if (!validate(id)) {
-      res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ error: 'Invalid id format provided, must be UUID' });
-      return;
-    }
-
+  removeTrackFromFavorite(@Param('id', ParseUUIDPipe) id: string, @Res() res) {
     if (!this.trackService.findOne(id)) {
       res
         .status(StatusCodes.NOT_FOUND)
@@ -105,14 +92,7 @@ export class FavoritesController {
   }
 
   @Delete('album/:id')
-  removeAlbumFromFavorite(@Param('id') id: string, @Res() res) {
-    if (!validate(id)) {
-      res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ error: 'Invalid id format provided, must be UUID' });
-      return;
-    }
-
+  removeAlbumFromFavorite(@Param('id', ParseUUIDPipe) id: string, @Res() res) {
     if (!this.albumService.findOne(id)) {
       res
         .status(StatusCodes.NOT_FOUND)
@@ -126,14 +106,7 @@ export class FavoritesController {
   }
 
   @Delete('artist/:id')
-  removeArtistFromFavorite(@Param('id') id: string, @Res() res) {
-    if (!validate(id)) {
-      res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ error: 'Invalid id format provided, must be UUID' });
-      return;
-    }
-
+  removeArtistFromFavorite(@Param('id', ParseUUIDPipe) id: string, @Res() res) {
     if (!this.artistService.findOne(id)) {
       res
         .status(StatusCodes.NOT_FOUND)

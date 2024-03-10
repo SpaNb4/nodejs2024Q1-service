@@ -188,7 +188,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/User'
         400:
-          description: Invalid id format provided, must be UUID
+          description: Validation failed (uuid  is expected)
         404:
           description: User not found
 
@@ -239,7 +239,7 @@ paths:
                     type: integer
                     example: 1655999999
         400:
-          description: Invalid id format provided, must be UUID
+          description: Validation failed (uuid  is expected)
         403:
           description: Forbidden, old password is incorrect
         404:
@@ -254,7 +254,7 @@ paths:
         204:
           description: The user has been deleted
         400:
-          description: Invalid id format provided, must be UUID
+          description: Validation failed (uuid  is expected)
         404:
           description: User not found
   /track:
@@ -330,7 +330,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Track'
         400:
-          description: Invalid id format provided, must be UUID
+          description: Validation failed (uuid  is expected)
         404:
           description: Track not found
     put:
@@ -406,7 +406,7 @@ paths:
         204:
           description: Deleted successfully
         400:
-          description: Invalid id format provided, must be UUID
+          description: Validation failed (uuid  is expected)
         404:
           description: Track not found
   /album:
@@ -479,7 +479,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Album'
         400:
-          description: Invalid id format provided, must be UUID
+          description: Validation failed (uuid  is expected)
         404:
           description: Album not found
     put:
@@ -515,7 +515,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Album'
         400:
-          description: Invalid id format provided, must be UUID
+          description: Validation failed (uuid  is expected)
         404:
           description: Album not found
     delete:
@@ -527,7 +527,7 @@ paths:
         204:
           description: Deleted successfully
         400:
-          description: Invalid id format provided, must be UUID
+          description: Validation failed (uuid  is expected)
         404:
           description: Album not found
   /artist:
@@ -594,7 +594,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Artist'
         400:
-          description: Invalid id format provided, must be UUID
+          description: Validation failed (uuid  is expected)
         404:
           description: Artist not found
     put:
@@ -624,7 +624,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Artist'
         400:
-          description: Invalid id format provided, must be UUID
+          description: Validation failed (uuid  is expected)
         404:
           description: Artist not found
     delete:
@@ -636,7 +636,7 @@ paths:
         204:
           description: Deleted successfully
         400:
-          description: Invalid id format provided, must be UUID
+          description: Validation failed (uuid  is expected)
         404:
           description: Artist not found
   /favs:
@@ -669,7 +669,7 @@ paths:
         201:
           description: Track added to favorites
         400:
-          description: Invalid id format provided, must be UUID
+          description: Validation failed (uuid  is expected)
         422:
           description: Track with id not found
     delete:
@@ -681,7 +681,7 @@ paths:
         204:
           description: Track removed from favorites
         400:
-          description: Invalid id format provided, must be UUID
+          description: Validation failed (uuid  is expected)
         404:
           description: Track with id not found
   /favs/album/{id}:
@@ -701,7 +701,7 @@ paths:
         201:
           description: Album added to favorites
         400:
-          description: Invalid id format provided, must be UUID
+          description: Validation failed (uuid  is expected)
         422:
           description: Album with id not found
     delete:
@@ -713,7 +713,7 @@ paths:
         204:
           description: Album removed from favorites
         400:
-          description: Invalid id format provided, must be UUID
+          description: Validation failed (uuid  is expected)
         404:
           description: Album with id not found
   /favs/artist/{id}:
@@ -733,7 +733,7 @@ paths:
         201:
           description: Artist added to favorites
         400:
-          description: Invalid id format provided, must be UUID
+          description: Validation failed (uuid  is expected)
         422:
           description: Artist with id not found
     delete:
@@ -745,6 +745,6 @@ paths:
         204:
           description: Artist removed from favorites
         400:
-          description: Invalid id format provided, must be UUID
+          description: Validation failed (uuid  is expected)
         404:
           description: Artist with id not found
