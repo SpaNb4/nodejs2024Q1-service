@@ -5,13 +5,16 @@ import {
   ForbiddenException,
   Get,
   HttpCode,
+  HttpStatus,
   NotFoundException,
   Param,
   ParseUUIDPipe,
   Post,
   Put,
+  UseFilters,
 } from '@nestjs/common';
-import { StatusCodes } from 'http-status-codes';
+import { NotFoundExceptionFilter } from 'src/filters/entity-not-found-exception.filter';
+
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { UserService } from './user.service';
@@ -52,14 +55,9 @@ export class UserController {
   }
 
   @Get(':id')
+  @UseFilters(new NotFoundExceptionFilter())
   findOne(@Param('id', ParseUUIDPipe) id: string) {
-    const user = this.userService.findOne(id);
-
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-
-    return user;
+    return this.userService.findOne(id);
   }
 
   @Put(':id')
@@ -87,7 +85,7 @@ export class UserController {
   }
 
   @Delete(':id')
-  @HttpCode(StatusCodes.NO_CONTENT)
+  @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id', ParseUUIDPipe) id: string) {
     const user = this.userService.findOne(id);
 

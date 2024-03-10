@@ -4,13 +4,13 @@ import {
   Delete,
   Get,
   HttpCode,
+  HttpStatus,
   NotFoundException,
   Param,
   ParseUUIDPipe,
   Post,
   Put,
 } from '@nestjs/common';
-import { StatusCodes } from 'http-status-codes';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { TrackService } from './track.service';
@@ -55,7 +55,7 @@ export class TrackController {
   }
 
   @Delete(':id')
-  @HttpCode(StatusCodes.NO_CONTENT)
+  @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id', ParseUUIDPipe) id: string) {
     const track = this.trackService.findOne(id);
 

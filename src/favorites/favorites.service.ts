@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { AlbumService } from 'src/album/album.service';
 import { ArtistService } from 'src/artist/artist.service';
 import { TrackService } from 'src/track/track.service';
@@ -39,14 +39,32 @@ export class FavoritesService {
   }
 
   addTrackToFavorite(id: string) {
+    const track = this.trackService.findOne(id);
+
+    if (!track) {
+      throw new UnprocessableEntityException('Track not found');
+    }
+
     this.favorites.tracks.push(id);
   }
 
   addAlbumToFavorite(id: string) {
+    const album = this.albumService.findOne(id);
+
+    if (!album) {
+      throw new UnprocessableEntityException('Album not found');
+    }
+
     this.favorites.albums.push(id);
   }
 
   addArtistToFavorite(id: string) {
+    const artist = this.artistService.findOne(id);
+
+    if (!artist) {
+      throw new UnprocessableEntityException('Artist not found');
+    }
+
     this.favorites.artists.push(id);
   }
 
