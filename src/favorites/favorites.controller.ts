@@ -25,7 +25,7 @@ export class FavoritesController {
     if (!validate(id)) {
       res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ error: 'Invalid request, id should be a valid uuid' });
+        .json({ error: 'Invalid id format provided, must be UUID' });
       return;
     }
 
@@ -67,7 +67,7 @@ export class FavoritesController {
     if (!validate(id)) {
       res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ error: 'Invalid request, id should be a valid uuid' });
+        .json({ error: 'Invalid id format provided, must be UUID' });
       return;
     }
 
@@ -88,7 +88,7 @@ export class FavoritesController {
     if (!validate(id)) {
       res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ error: 'Invalid request, id should be a valid uuid' });
+        .json({ error: 'Invalid id format provided, must be UUID' });
       return;
     }
 
@@ -109,7 +109,7 @@ export class FavoritesController {
     if (!validate(id)) {
       res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ error: 'Invalid request, id should be a valid uuid' });
+        .json({ error: 'Invalid id format provided, must be UUID' });
       return;
     }
 
@@ -130,7 +130,7 @@ export class FavoritesController {
     if (!validate(id)) {
       res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ error: 'Invalid request, id should be a valid uuid' });
+        .json({ error: 'Invalid id format provided, must be UUID' });
       return;
     }
 

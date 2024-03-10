@@ -20,7 +20,7 @@ export class ArtistController {
 
   @Post()
   create(@Body() createArtistDto: CreateArtistDto, @Res() res) {
-    if (!createArtistDto.name || !createArtistDto.grammy) {
+    if (!createArtistDto.name || createArtistDto.grammy === undefined) {
       res
         .status(StatusCodes.BAD_REQUEST)
         .json({ error: 'Invalid request, name, and grammy are required' });
