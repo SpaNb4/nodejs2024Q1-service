@@ -67,7 +67,9 @@ export class UserController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updatePasswordDto: UpdatePasswordDto,
   ) {
-    if (!this.userService.findOne(id)) {
+    const user = this.userService.findOne(id);
+
+    if (!user) {
       throw new NotFoundException('User not found');
     }
 
@@ -87,7 +89,9 @@ export class UserController {
   @Delete(':id')
   @HttpCode(StatusCodes.NO_CONTENT)
   remove(@Param('id', ParseUUIDPipe) id: string) {
-    if (!this.userService.findOne(id)) {
+    const user = this.userService.findOne(id);
+
+    if (!user) {
       throw new NotFoundException('User not found');
     }
 
