@@ -1,3 +1,4 @@
+import { OmitType } from '@nestjs/mapped-types';
 import { Artist } from '../entities/artist.entity';
 
-export type CreateArtistDto = Omit<Artist, 'id'>;
+export class CreateArtistDto extends OmitType(Artist, ['id'] as const) {}

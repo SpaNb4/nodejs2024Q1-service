@@ -3,14 +3,14 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  NotFoundException,
   Param,
   ParseUUIDPipe,
   Post,
   Put,
-  Res,
 } from '@nestjs/common';
 import { StatusCodes } from 'http-status-codes';
-import { validate } from 'uuid';
 import { ArtistService } from './artist.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
@@ -20,73 +20,49 @@ export class ArtistController {
   constructor(private readonly artistService: ArtistService) {}
 
   @Post()
-  create(@Body() createArtistDto: CreateArtistDto, @Res() res) {
-    if (!createArtistDto.name || createArtistDto.grammy === undefined) {
-      res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ error: 'Invalid request, name, and grammy are required' });
-      return;
-    }
-
-    const createdArtist = this.artistService.create(createArtistDto);
-
-    res.status(StatusCodes.CREATED).json(createdArtist);
+  create(@Body() createArtistDto: CreateArtistDto) {
+    return this.artistService.create(createArtistDto);
   }
 
   @Get()
-  findAll(@Res() res) {
-    const users = this.artistService.findAll();
-
-    res.status(StatusCodes.OK).json(users);
+  findAll() {
+    return this.artistService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseUUIDPipe) id: string, @Res() res) {
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
     const artist = this.artistService.findOne(id);
 
     if (!artist) {
-      res.status(StatusCodes.NOT_FOUND).json({ error: 'Artist not found' });
-      return;
+      throw new NotFoundException('Artist not found');
     }
 
-    res.status(StatusCodes.OK).json(artist);
+    return artist;
   }
 
   @Put(':id')
   update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateArtistDto: UpdateArtistDto,
-    @Res() res,
   ) {
-    if (
-      typeof updateArtistDto.name !== 'string' ||
-      typeof updateArtistDto.grammy !== 'boolean'
-    ) {
-      res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ error: 'Invalid request, name, and grammy is required' });
-      return;
+    const artist = this.artistService.findOne(id);
+
+    if (!artist) {
+      throw new NotFoundException('Artist not found');
     }
 
-    if (!this.artistService.findOne(id)) {
-      res.status(StatusCodes.NOT_FOUND).json({ error: 'Artist not found' });
-      return;
-    }
-
-    const updatedArtist = this.artistService.update(id, updateArtistDto);
-
-    res.status(StatusCodes.OK).json(updatedArtist);
+    return this.artistService.update(id, updateArtistDto);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseUUIDPipe) id: string, @Res() res) {
-    if (!this.artistService.findOne(id)) {
-      res.status(StatusCodes.NOT_FOUND).json({ error: 'Artist not found' });
-      return;
+  @HttpCode(StatusCodes.NO_CONTENT)
+  remove(@Param('id', ParseUUIDPipe) id: string) {
+    const artist = this.artistService.findOne(id);
+
+    if (!artist) {
+      throw new NotFoundException('Artist not found');
     }
 
     this.artistService.removeArtist(id);
-
-    res.status(StatusCodes.NO_CONTENT).send();
   }
 }
