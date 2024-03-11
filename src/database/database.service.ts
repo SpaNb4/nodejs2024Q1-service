@@ -12,7 +12,7 @@ export class DatabaseService<T extends DBEntity> {
   public create(record: Partial<T>) {
     const id = uuidv4();
 
-    const newRecord = { ...record, id } as T;
+    const newRecord = { id, ...record } as T;
 
     this.recordMap[id] = newRecord;
 

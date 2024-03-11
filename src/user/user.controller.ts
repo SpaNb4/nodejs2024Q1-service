@@ -48,7 +48,12 @@ export class UserController {
 
   @Get()
   findAll() {
-    return this.userService.findAll();
+    const users = this.userService.findAll();
+
+    // TODO find a better way to handle this
+    const usersWithoutPassword = users.map(({ password, ...user }) => user);
+
+    return usersWithoutPassword;
   }
 
   @Get(':id')

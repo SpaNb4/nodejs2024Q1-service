@@ -12,7 +12,7 @@ const port = process.env.PORT || 4000;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
   const file = await fs.readFile(
     path.join(__dirname, '../doc/api.yaml'),
