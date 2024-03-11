@@ -42,6 +42,7 @@ components:
         id:
           type: string
           format: uuid
+          readOnly: true
         name:
           type: string
           example: 'Freddie Mercury'
@@ -58,6 +59,7 @@ components:
         id:
           type: string
           format: uuid
+          readOnly: true
         name:
           type: string
           example: 'Innuendo'
@@ -79,6 +81,7 @@ components:
         id:
           type: string
           format: uuid
+          readOnly: true
         name:
           type: string
           example: The Show Must Go On
@@ -219,24 +222,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                title: example
-                properties:
-                  id:
-                    type: string
-                    format: uuid
-                  login:
-                    type: string
-                    example: TestUser
-                  version:
-                    type: integer
-                    example: 2
-                  createdAt:
-                    type: integer
-                    example: 1655000000
-                  updatedAt:
-                    type: integer
-                    example: 1655999999
+                $ref: '#/components/schemas/User'
         400:
           description: Validation failed (uuid  is expected)
         403:
@@ -281,26 +267,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                artistId:
-                  type: string
-                  format: uuid
-                  nullable: true
-                albumId:
-                  type: string
-                  format: uuid
-                  nullable: true
-                duration:
-                  type: integer
-                  description: In seconds
-              required:
-                - name
-                - artistId
-                - albumId
-                - duration
+              $ref: '#/components/schemas/Track'
       responses:
         201:
           description: Successful operation
@@ -344,56 +311,14 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              title: example
-              properties:
-                name:
-                  type: string
-                  example: Bohemian Rhapsody
-                artistId:
-                  type: string
-                  format: uuid
-                  nullable: true
-                duration:
-                  type: integer
-                  description: In seconds
-                  example: 355
-                albumId:
-                  type: string
-                  format: uuid
-                  nullable: true
-              required:
-                - name
-                - artistId
-                - duration
-                - albumId
+              $ref: '#/components/schemas/Track'
       responses:
         200:
           description: The track has been updated.
           content:
             application/json:
               schema:
-                type: object
-                title: example
-                properties:
-                  id:
-                    type: string
-                    format: uuid
-                  name:
-                    type: string
-                    example: Bohemian Rhapsody
-                  artistId:
-                    type: string
-                    format: uuid
-                    nullable: true
-                  duration:
-                    type: integer
-                    description: In seconds
-                    example: 355
-                  albumId:
-                    type: string
-                    format: uuid
-                    nullable: true
+                $ref: '#/components/schemas/Track'
         400:
           description: Invalid request, name, artistId, albumId, and duration are required
         404:
@@ -435,21 +360,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              title: example
-              properties:
-                name:
-                  type: string
-                year:
-                  type: integer
-                artistId:
-                  type: string
-                  format: uuid
-                  nullable: true
-              required:
-                - name
-                - year
-                - artistId
+              $ref: '#/components/schemas/Album'
       responses:
         201:
           description: Album is created
@@ -493,21 +404,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              title: example
-              properties:
-                name:
-                  type: string
-                year:
-                  type: integer
-                artistId:
-                  type: string
-                  format: uuid
-                  nullable: true
-              required:
-                - name
-                - year
-                - artistId
+              $ref: '#/components/schemas/Album'
       responses:
         200:
           description: The album has been updated.
@@ -556,15 +453,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                grammy:
-                  type: boolean
-              required:
-                - name
-                - grammy
+              $ref: '#/components/schemas/Artist'
       responses:
         201:
           description: Successful operation
@@ -608,15 +497,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                grammy:
-                  type: boolean
-              required:
-                - name
-                - grammy
+              $ref: '#/components/schemas/Artist'
       responses:
         200:
           description: The artist has been updated.
@@ -652,7 +533,20 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Favorites'
+                type: object
+                properties:
+                  artists:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Artist'
+                  albums:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Album'
+                  tracks:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Track'
   /favs/track/{id}:
     parameters:
       - name: id
@@ -672,7 +566,7 @@ paths:
         400:
           description: Validation failed (uuid  is expected)
         422:
-          description: Track with id not found
+          description: Track not found
     delete:
       tags:
         - Favorites
@@ -684,7 +578,7 @@ paths:
         400:
           description: Validation failed (uuid  is expected)
         404:
-          description: Track with id not found
+          description: Track not found
   /favs/album/{id}:
     parameters:
       - name: id
@@ -704,7 +598,7 @@ paths:
         400:
           description: Validation failed (uuid  is expected)
         422:
-          description: Album with id not found
+          description: Album not found
     delete:
       tags:
         - Favorites
@@ -716,7 +610,7 @@ paths:
         400:
           description: Validation failed (uuid  is expected)
         404:
-          description: Album with id not found
+          description: Album not found
   /favs/artist/{id}:
     parameters:
       - name: id
@@ -736,7 +630,7 @@ paths:
         400:
           description: Validation failed (uuid  is expected)
         422:
-          description: Artist with id not found
+          description: Artist not found
     delete:
       tags:
         - Favorites
@@ -748,4 +642,4 @@ paths:
         400:
           description: Validation failed (uuid  is expected)
         404:
-          description: Artist with id not found
+          description: Artist not found
