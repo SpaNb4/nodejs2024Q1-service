@@ -4,9 +4,6 @@ info:
   description: Home music library service
   version: 1.0.0
 
-servers:
-  - url: /
-
 components:
   schemas:
     User:
@@ -15,12 +12,14 @@ components:
         id:
           type: string
           format: uuid
+          readOnly: true
         login:
           type: string
           example: 'TestUser'
         password:
           type: string
           example: 'password'
+          writeOnly: true
         version:
           type: number
           example: 1
@@ -107,15 +106,15 @@ components:
         artists:
           type: array
           items:
-            $ref: '#/components/schemas/Artist'
+            type: string
         albums:
           type: array
           items:
-            $ref: '#/components/schemas/Album'
+            type: string
         tracks:
           type: array
           items:
-            $ref: '#/components/schemas/Track'
+            type: string
       required:
         - artists
         - albums
@@ -232,10 +231,10 @@ paths:
                   version:
                     type: integer
                     example: 2
-                  createAt:
+                  createdAt:
                     type: integer
                     example: 1655000000
-                  updateAt:
+                  updatedAt:
                     type: integer
                     example: 1655999999
         400:
@@ -289,9 +288,11 @@ paths:
                 artistId:
                   type: string
                   format: uuid
+                  nullable: true
                 albumId:
                   type: string
                   format: uuid
+                  nullable: true
                 duration:
                   type: integer
                   description: In seconds
@@ -644,7 +645,7 @@ paths:
       tags:
         - Favorites
       summary: Get all favorites
-      description: Gets all favorites movies, tracks and books
+      description: Gets all favorites movies, tracks and artists
       responses:
         200:
           description: Successful operation
