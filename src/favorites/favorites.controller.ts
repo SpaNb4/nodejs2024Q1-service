@@ -3,13 +3,13 @@ import {
   Delete,
   Get,
   HttpCode,
+  HttpStatus,
   NotFoundException,
   Param,
   ParseUUIDPipe,
   Post,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { StatusCodes } from 'http-status-codes';
 import { AlbumService } from 'src/album/album.service';
 import { ArtistService } from 'src/artist/artist.service';
 import { TrackService } from 'src/track/track.service';
@@ -63,7 +63,7 @@ export class FavoritesController {
   }
 
   @Delete('track/:id')
-  @HttpCode(StatusCodes.NO_CONTENT)
+  @HttpCode(HttpStatus.NO_CONTENT)
   removeTrackFromFavorite(@Param('id', ParseUUIDPipe) id: string) {
     const track = this.trackService.findOne(id);
 
@@ -75,7 +75,7 @@ export class FavoritesController {
   }
 
   @Delete('album/:id')
-  @HttpCode(StatusCodes.NO_CONTENT)
+  @HttpCode(HttpStatus.NO_CONTENT)
   removeAlbumFromFavorite(@Param('id', ParseUUIDPipe) id: string) {
     const album = this.albumService.findOne(id);
 
@@ -87,7 +87,7 @@ export class FavoritesController {
   }
 
   @Delete('artist/:id')
-  @HttpCode(StatusCodes.NO_CONTENT)
+  @HttpCode(HttpStatus.NO_CONTENT)
   removeArtistFromFavorite(@Param('id', ParseUUIDPipe) id: string) {
     const artist = this.artistService.findOne(id);
 
