@@ -1,33 +1,43 @@
 import { Injectable } from '@nestjs/common';
-import { DatabaseService } from 'src/database/database.service';
+import { PrismaService } from 'src/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
-import { User } from './entities/user.entity';
 
 @Injectable()
-export class UserService extends DatabaseService<User> {
-  constructor() {
-    super();
+export class UserService {
+  constructor(private prisma: PrismaService) {}
+
+  async findOne(id: string) {
+    return this.prisma.user.findUnique({ where: { id } });
   }
 
-  create(createUserDto: CreateUserDto) {
+  async findAll() {
+    return this.prisma.user.findMany();
+  }
+
+  // Prisma.UserCreateInput or CreateUserDto?
+  async create(createUserDto: CreateUserDto) {
     const user = {
       ...createUserDto,
-      version: 1,
       createdAt: Date.now(),
       updatedAt: Date.now(),
     };
 
-    return super.create(user);
+    return this.prisma.user.create({ data: user });
   }
 
-  updatePassword(id: string, updatePasswordDto: UpdatePasswordDto) {
-    const user = this.findOne(id);
+  async updatePassword(id: string, updatePasswordDto: UpdatePasswordDto) {
+    return this.prisma.user.update({
+      where: { id },
+      data: {
+        password: updatePasswordDto.newPassword,
+        version: { increment: 1 },
+        updatedAt: Date.now(),
+      },
+    });
+  }
 
-    user.password = updatePasswordDto.newPassword;
-    user.version += 1;
-    user.updatedAt = Date.now();
-
-    return user;
+  async remove(id: string) {
+    return this.prisma.user.delete({ where: { id } });
   }
 }

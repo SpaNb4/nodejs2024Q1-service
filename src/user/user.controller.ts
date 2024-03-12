@@ -23,23 +23,9 @@ import { UserService } from './user.service';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  // TODO
-  // @Get('seed')
-  // seed() {
-  //   const userFactory = (idx: number): Partial<User> => ({
-  //     id: `${idx}`,
-  //     login: `user${idx}`,
-  //     password: `password${idx}`,
-  //   });
-
-  //   this.userService.seed(userFactory, 10);
-
-  //   return this.userService.findAll();
-  // }
-
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    const createdUser = this.userService.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto) {
+    const createdUser = await this.userService.create(createUserDto);
     // TODO find a better way to handle this
     const { password, ...userWithoutPassword } = createdUser;
 
@@ -47,8 +33,8 @@ export class UserController {
   }
 
   @Get()
-  findAll() {
-    const users = this.userService.findAll();
+  async findAll() {
+    const users = await this.userService.findAll();
 
     // TODO find a better way to handle this
     const usersWithoutPassword = users.map(({ password, ...user }) => user);
@@ -57,8 +43,8 @@ export class UserController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseUUIDPipe) id: string) {
-    const user = this.userService.findOne(id);
+  async findOne(@Param('id', ParseUUIDPipe) id: string) {
+    const user = await this.userService.findOne(id);
 
     if (!user) {
       throw new NotFoundException('User not found');
@@ -68,23 +54,28 @@ export class UserController {
   }
 
   @Put(':id')
-  update(
+  async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updatePasswordDto: UpdatePasswordDto,
   ) {
-    const user = this.userService.findOne(id);
+    const user = await this.userService.findOne(id);
 
     if (!user) {
       throw new NotFoundException('User not found');
     }
 
-    const currentUserPassword = this.userService.findOne(id).password;
+    const { password: currentUserPassword } = await this.userService.findOne(
+      id,
+    );
 
     if (updatePasswordDto.oldPassword !== currentUserPassword) {
       throw new ForbiddenException('Forbidden, old password is incorrect');
     }
 
-    const updatedUser = this.userService.updatePassword(id, updatePasswordDto);
+    const updatedUser = await this.userService.updatePassword(
+      id,
+      updatePasswordDto as any,
+    );
     // TODO find a better way to handle this
     const { password, ...userWithoutPassword } = updatedUser;
 
@@ -93,8 +84,8 @@ export class UserController {
 
   @Delete(':id')
   @HttpCode(StatusCodes.NO_CONTENT)
-  remove(@Param('id', ParseUUIDPipe) id: string) {
-    const user = this.userService.findOne(id);
+  async remove(@Param('id', ParseUUIDPipe) id: string) {
+    const user = await this.userService.findOne(id);
 
     if (!user) {
       throw new NotFoundException('User not found');

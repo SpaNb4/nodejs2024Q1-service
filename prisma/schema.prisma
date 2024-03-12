@@ -14,12 +14,12 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  login     String   @unique
+  id        String @id @default(uuid())
+  login     String
   password  String
-  version   Int      @default(1)
-  createdAt DateTime @default(now()) @db.Timestamptz()
-  updatedAt DateTime @updatedAt
+  version   Int    @default(1)
+  createdAt BigInt @default(0)
+  updatedAt BigInt @default(0)
 }
 
 model Artist {
