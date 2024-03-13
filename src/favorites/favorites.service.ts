@@ -18,23 +18,29 @@ export class FavoritesService {
     private readonly trackService: TrackService,
   ) {}
 
-  getFavorites() {
-    const artists = this.artistService
-      .findAll()
-      .filter((artist) => this.favorites.artists.includes(artist.id));
+  async getFavorites() {
+    const artists = await this.artistService.findAll();
 
-    const albums = this.albumService
-      .findAll()
-      .filter((album) => this.favorites.albums.includes(album.id));
+    const filteredArtists = artists.filter((artist) =>
+      this.favorites.artists.includes(artist.id),
+    );
 
-    const tracks = this.trackService
-      .findAll()
-      .filter((track) => this.favorites.tracks.includes(track.id));
+    const albums = await this.albumService.findAll();
+
+    const filteredAlbums = albums.filter((album) =>
+      this.favorites.albums.includes(album.id),
+    );
+
+    const tracks = await this.trackService.findAll();
+
+    const filteredTracks = tracks.filter((track) =>
+      this.favorites.tracks.includes(track.id),
+    );
 
     return {
-      artists,
-      albums,
-      tracks,
+      artists: filteredArtists,
+      albums: filteredAlbums,
+      tracks: filteredTracks,
     };
   }
 

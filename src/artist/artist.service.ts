@@ -1,36 +1,29 @@
 import { Injectable } from '@nestjs/common';
-import { AlbumService } from 'src/album/album.service';
-import { DatabaseService } from 'src/database/database.service';
-
-import { TrackService } from 'src/track/track.service';
-import { Artist } from './entities/artist.entity';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { CreateArtistDto } from './dto/create-artist.dto';
+import { UpdateArtistDto } from './dto/update-artist.dto';
 
 @Injectable()
-export class ArtistService extends DatabaseService<Artist> {
-  constructor(
-    private readonly albumService: TrackService,
-    private readonly trackService: AlbumService,
-  ) {
-    super();
+export class ArtistService {
+  constructor(private prisma: PrismaService) {}
+
+  async findOne(id: string) {
+    return this.prisma.artist.findUnique({ where: { id } });
   }
 
-  removeArtist(id: string) {
-    super.remove(id);
+  async findAll() {
+    return this.prisma.artist.findMany();
+  }
 
-    const artistAlbums = this.albumService
-      .findAll()
-      .filter((album) => album.artistId === id);
+  async create(createArtistDto: CreateArtistDto) {
+    return this.prisma.artist.create({ data: createArtistDto });
+  }
 
-    artistAlbums.forEach((album) => {
-      album.artistId = null;
-    });
+  async update(id: string, updateArtistDto: UpdateArtistDto) {
+    return this.prisma.artist.update({ where: { id }, data: updateArtistDto });
+  }
 
-    const artistTracks = this.trackService
-      .findAll()
-      .filter((track) => track.artistId === id);
-
-    artistTracks.forEach((track) => {
-      track.artistId = null;
-    });
+  async remove(id: string) {
+    return this.prisma.artist.delete({ where: { id } });
   }
 }

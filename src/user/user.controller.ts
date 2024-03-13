@@ -91,6 +91,6 @@ export class UserController {
       throw new NotFoundException('User not found');
     }
 
-    this.userService.remove(id);
+    await this.userService.remove(id);
   }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 
@@ -15,7 +15,7 @@ export class UserService {
     return this.prisma.user.findMany();
   }
 
-  // Prisma.UserCreateInput or CreateUserDto?
+  // TODO Prisma.UserCreateInput or CreateUserDto?
   async create(createUserDto: CreateUserDto) {
     const user = {
       ...createUserDto,

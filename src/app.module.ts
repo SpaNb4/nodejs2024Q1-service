@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { AlbumModule } from './album/album.module';
 import { ArtistModule } from './artist/artist.module';
-import { DatabaseModule } from './database/database.module';
 import { FavoritesModule } from './favorites/favorites.module';
+import { PrismaModule } from './prisma/prisma.module';
 import { TrackModule } from './track/track.module';
 import { UserModule } from './user/user.module';
 
@@ -13,7 +13,7 @@ import { UserModule } from './user/user.module';
     TrackModule,
     AlbumModule,
     FavoritesModule,
-    DatabaseModule,
+    PrismaModule,
   ],
 })
 export class AppModule {}
