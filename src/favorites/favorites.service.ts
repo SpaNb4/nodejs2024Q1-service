@@ -1,82 +1,92 @@
+import { Album, Artist, Track } from '.prisma/client';
 import { Injectable } from '@nestjs/common';
-import { AlbumService } from 'src/album/album.service';
-import { ArtistService } from 'src/artist/artist.service';
-import { TrackService } from 'src/track/track.service';
-import { Favorites } from './entities/favorite.entity';
+import { PrismaService } from 'src/prisma/prisma.service';
+
+const FAVORITES_ID = '1';
 
 @Injectable()
 export class FavoritesService {
-  private favorites: Favorites = {
-    artists: [],
-    albums: [],
-    tracks: [],
-  };
-
-  constructor(
-    private readonly artistService: ArtistService,
-    private readonly albumService: AlbumService,
-    private readonly trackService: TrackService,
-  ) {}
-
-  async getFavorites() {
-    const artists = await this.artistService.findAll();
-
-    const filteredArtists = artists.filter((artist) =>
-      this.favorites.artists.includes(artist.id),
-    );
-
-    const albums = await this.albumService.findAll();
-
-    const filteredAlbums = albums.filter((album) =>
-      this.favorites.albums.includes(album.id),
-    );
-
-    const tracks = await this.trackService.findAll();
-
-    const filteredTracks = tracks.filter((track) =>
-      this.favorites.tracks.includes(track.id),
-    );
-
-    return {
-      artists: filteredArtists,
-      albums: filteredAlbums,
-      tracks: filteredTracks,
-    };
+  constructor(private prisma: PrismaService) {
+    void this.initializeFavoritesRecord();
   }
 
-  addTrackToFavorite(id: string) {
-    this.favorites.tracks.push(id);
-  }
+  private async initializeFavoritesRecord(): Promise<void> {
+    const favorites = await this.prisma.favorites.findUnique({
+      where: { id: FAVORITES_ID },
+    });
 
-  addAlbumToFavorite(id: string) {
-    this.favorites.albums.push(id);
-  }
-
-  addArtistToFavorite(id: string) {
-    this.favorites.artists.push(id);
-  }
-
-  removeTrackFromFavorite(id: string) {
-    const index = this.favorites.tracks.indexOf(id);
-
-    if (index > -1) {
-      this.favorites.tracks.splice(index, 1);
+    if (!favorites) {
+      await this.prisma.favorites.create({
+        data: { id: FAVORITES_ID },
+      });
     }
   }
 
-  removeAlbumFromFavorite(id: string) {
-    const index = this.favorites.albums.indexOf(id);
-
-    if (index > -1) {
-      this.favorites.albums.splice(index, 1);
-    }
+  async getFavorites(): Promise<{
+    artists: Artist[];
+    albums: Album[];
+    tracks: Track[];
+  }> {
+    return this.prisma.favorites.findFirst({
+      include: {
+        artists: true,
+        albums: true,
+        tracks: true,
+      },
+    });
   }
 
-  removeArtistFromFavorite(id: string) {
-    const index = this.favorites.artists.indexOf(id);
+  async addTrackToFavorite(trackId: string) {
+    await this.prisma.favorites.update({
+      where: { id: FAVORITES_ID },
+      data: {
+        tracks: { connect: { id: trackId } },
+      },
+    });
+  }
 
-    if (index > -1) {
-      this.favorites.artists.splice(index, 1);
-    }
+  async addAlbumToFavorite(albumId: string) {
+    await this.prisma.favorites.update({
+      where: { id: FAVORITES_ID },
+      data: {
+        albums: { connect: { id: albumId } },
+      },
+    });
+  }
+
+  async addArtistToFavorite(artistId: string) {
+    await this.prisma.favorites.update({
+      where: { id: FAVORITES_ID },
+      data: {
+        artists: { connect: { id: artistId } },
+      },
+    });
+  }
+
+  async removeTrackFromFavorite(trackId: string) {
+    await this.prisma.favorites.update({
+      where: { id: FAVORITES_ID },
+      data: {
+        tracks: { disconnect: { id: trackId } },
+      },
+    });
+  }
+
+  async removeAlbumFromFavorite(albumId: string) {
+    await this.prisma.favorites.update({
+      where: { id: FAVORITES_ID },
+      data: {
+        albums: { disconnect: { id: albumId } },
+      },
+    });
+  }
+
+  async removeArtistFromFavorite(artistId: string) {
+    await this.prisma.favorites.update({
+      where: { id: FAVORITES_ID },
+      data: {
+        artists: { disconnect: { id: artistId } },
+      },
+    });
   }
 }

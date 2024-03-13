@@ -29,17 +29,6 @@ export class FavoritesController {
     return await this.favoritesService.getFavorites();
   }
 
-  @Post('track/:id')
-  async addTrackToFavorite(@Param('id', ParseUUIDPipe) id: string) {
-    const track = await this.trackService.findOne(id);
-
-    if (!track) {
-      throw new UnprocessableEntityException('Track not found');
-    }
-
-    await this.favoritesService.addTrackToFavorite(id);
-  }
-
   @Post('album/:id')
   async addAlbumToFavorite(@Param('id', ParseUUIDPipe) id: string) {
     const album = await this.albumService.findOne(id);
@@ -48,7 +37,7 @@ export class FavoritesController {
       throw new UnprocessableEntityException('Album not found');
     }
 
-    this.favoritesService.addAlbumToFavorite(id);
+    await this.favoritesService.addAlbumToFavorite(id);
   }
 
   @Post('artist/:id')
