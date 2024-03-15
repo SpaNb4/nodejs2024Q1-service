@@ -1,5 +1,5 @@
-import { Album, Artist, Track } from '.prisma/client';
 import { Injectable } from '@nestjs/common';
+import { Album, Artist, Track } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 const FAVORITES_ID = '1';

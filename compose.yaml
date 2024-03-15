@@ -1,17 +1,52 @@
+version: '3.8'
+
 services:
-  db:
-    image: postgres:16-alpine
-    restart: always
-    environment:
-      POSTGRES_PASSWORD: admin
+  postgres:
+    build:
+      context: .
+      dockerfile: Dockerfile.db
     ports:
-      - 5432:5432
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - db-data:/var/log/postgresql
+    networks:
+      - my-network
 
   pgadmin:
     image: dpage/pgadmin4
     restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@mail.com
-      PGADMIN_DEFAULT_PASSWORD: admin
+    env_file:
+      - .env
     ports:
-      - 80:80
+      - ${PGADMIN_PORT}:${PGADMIN_PORT}
+    networks:
+      - my-network
+
+  backend:
+    depends_on:
+      - postgres
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+    ports:
+      - ${BACKEND_PORT}:${BACKEND_PORT}
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - backend-data:/app/data
+      - ./src:/app/src
+    networks:
+      - my-network
+
+volumes:
+  backend-data:
+  db-data:
+
+networks:
+  my-network:
+    driver: bridge
