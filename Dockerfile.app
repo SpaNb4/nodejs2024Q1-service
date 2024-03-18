@@ -4,12 +4,12 @@ FROM node:20-alpine AS build
 WORKDIR /app
 
 COPY package*.json ./
+COPY prisma ./prisma/
 
 RUN npm ci
 
 COPY . .
 
-RUN npx prisma generate
 RUN npm run build
 
 # Stage 2: Copy built artifacts and set up production environment
@@ -25,4 +25,4 @@ COPY --from=build /app/doc/api.yaml ./doc/api.yaml
 
 RUN npm ci --omit=dev
 
-CMD sh -c "npx prisma migrate dev --name init && npm run start:dev"
+CMD sh -c "npx prisma migrate deploy && npm run start:dev"
