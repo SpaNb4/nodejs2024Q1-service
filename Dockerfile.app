@@ -1,4 +1,3 @@
-# Stage 1: Install dependencies and build the app
 FROM node:20-alpine AS build
 
 WORKDIR /app
@@ -12,7 +11,6 @@ COPY . .
 
 RUN npm run build
 
-# Stage 2: Copy built artifacts and set up production environment
 FROM node:20-alpine AS production
 
 WORKDIR /app

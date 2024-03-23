@@ -4,6 +4,7 @@
 
 - Git - [Download & Install Git](https://git-scm.com/downloads).
 - Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
+- Docker - [Download & Install Docker](https://www.docker.com/get-started).
 
 ## Cloning the repository
 
@@ -17,21 +18,38 @@ git clone git@github.com:SpaNb4/nodejs2024Q1-service.git
 npm ci
 ```
 
-## Running application
-
-Production mode:
+## Running the application
 
 ```
-npm start
+docker compose up
 ```
 
-Development mode:
+By default, the application will run on port 4000, in development mode, so it will automatically restart when you make changes to the code in the `src` directory.
+
+## Stopping the application
 
 ```
-npm run start:dev
+docker compose down
 ```
 
-By default, the application will run on port 4000. You can change it by changing the `PORT` variable in the `.env` file.
+## PgAdmin
+
+If you want to access the PgAdmin interface and manage the Postgres database, you can do so by visiting http://localhost:80 in your browser. You can log in using the email and password you provided in the `.env` file.
+
+## Environment variables
+
+Create a `.env` file in the root directory of the project and add the following environment variables:
+
+- BACKEND_PORT: The port on which the backend application will run.
+- POSTGRES_HOST: The hostname of the Postgres database.
+- POSTGRES_PORT: The port number of the Postgres database.
+- POSTGRES_USER: The username for accessing the Postgres database.
+- POSTGRES_PASSWORD: The password for accessing the Postgres database.
+- POSTGRES_DB: The name of the Postgres database.
+- PGADMIN_PORT: The port on which PgAdmin will run.
+- PGADMIN_DEFAULT_EMAIL: The default email address for PgAdmin.
+- PGADMIN_DEFAULT_PASSWORD: The default password for PgAdmin.
+- DATABASE_URL: The connection URL for the Prisma ORM.
 
 ## OpenAPI/Swagger
 
