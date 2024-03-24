@@ -5,24 +5,26 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.db
+    command: '-c logging_collector=on -c log_directory=logs -c log_statement=all'
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
     restart: always
     env_file:
       - .env
     volumes:
-      - db-data:/var/lib/postgresql/data
-      - db-data:/var/log/postgresql
+      - postgres-data:/var/lib/postgresql/data
     networks:
       - my-network
 
   pgadmin:
     image: dpage/pgadmin4
-    restart: always
     env_file:
       - .env
     ports:
       - ${PGADMIN_PORT}:${PGADMIN_PORT}
+    restart: always
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
     networks:
       - my-network
 
@@ -38,14 +40,15 @@ services:
     env_file:
       - .env
     volumes:
-      - backend-data:/app/data
+      - backend-data:/app
       - ./src:/app/src
     networks:
       - my-network
 
 volumes:
+  postgres-data:
   backend-data:
-  db-data:
+  pgadmin-data:
 
 networks:
   my-network:
