@@ -32,10 +32,6 @@ By default, the application will run on port 4000, in development mode, so it wi
 docker compose down
 ```
 
-## PgAdmin
-
-If you want to access the PgAdmin interface and manage the Postgres database, you can do so by visiting http://localhost:80 in your browser. You can log in using the email and password you provided in the `.env` file.
-
 ## Environment variables
 
 Create a `.env` file in the root directory of the project and add the following environment variables:
@@ -50,6 +46,10 @@ Create a `.env` file in the root directory of the project and add the following 
 - PGADMIN_DEFAULT_EMAIL: The default email address for PgAdmin.
 - PGADMIN_DEFAULT_PASSWORD: The default password for PgAdmin.
 - DATABASE_URL: The connection URL for the Prisma ORM.
+
+## PgAdmin
+
+If you want to access the PgAdmin interface and manage the Postgres database, you can do so by visiting http://localhost:80 in your browser. You can log in using the email and password you provided in the `.env` file.
 
 ## OpenAPI/Swagger
 
