@@ -49,7 +49,7 @@ Create a `.env` file in the root directory of the project and add the following 
 
 ## PgAdmin
 
-If you want to access the PgAdmin interface and manage the Postgres database, you can do so by visiting http://localhost:80 in your browser. You can log in using the email and password you provided in the `.env` file.
+If you want to access the PgAdmin interface and manage the Postgres database, you can do so by visiting http://localhost:5050 in your browser. You can log in using the email and password you provided in the `.env` file.
 
 ## OpenAPI/Swagger
 

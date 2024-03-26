@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.db
-    command: '-c logging_collector=on -c log_directory=logs -c log_statement=all'
+    command: '-c logging_collector=on -c log_directory=logs -c log_statement=all -p ${POSTGRES_PORT}'
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
     restart: always

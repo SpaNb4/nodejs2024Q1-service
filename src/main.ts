@@ -23,7 +23,7 @@ import 'dotenv/config';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { HttpInterceptor } from './interceptors/http-interceptor';
 
-const port = process.env.PORT || 4000;
+const port = process.env.BACKEND_PORT || 4000;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
