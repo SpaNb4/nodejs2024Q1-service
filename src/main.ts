@@ -5,6 +5,7 @@ import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import * as YAML from 'yaml';
 import { AppModule } from './app.module';
+import { Logger } from './logger/logger.service';
 
 // Temporary fix for BigInt serialization
 // https://github.com/expressjs/express/issues/4453
@@ -19,11 +20,20 @@ BigInt.prototype.toJSON = function () {
 };
 
 import 'dotenv/config';
+import { HttpExceptionFilter } from './filters/http-exception.filter';
+import { HttpInterceptor } from './interceptors/http-interceptor';
 
 const port = process.env.PORT || 4000;
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    bufferLogs: true,
+  });
+
+  app.useLogger(app.get(Logger));
+
+  app.useGlobalInterceptors(new HttpInterceptor());
+  app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
   const file = await fs.readFile(

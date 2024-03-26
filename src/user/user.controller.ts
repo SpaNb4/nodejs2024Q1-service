@@ -12,6 +12,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { StatusCodes } from 'http-status-codes';
+import { Logger } from 'src/logger/logger.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { UserService } from './user.service';
@@ -21,7 +22,12 @@ import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private logger: Logger,
+  ) {
+    this.logger.setContext('CatsService');
+  }
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
@@ -34,6 +40,10 @@ export class UserController {
 
   @Get()
   async findAll() {
+    throw 111;
+    // You can call all the default methods
+    this.logger.log('About to return cats!');
+
     const users = await this.userService.findAll();
 
     // TODO find a better way to handle this
