@@ -5,7 +5,7 @@ import {
   HttpException,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { Logger } from 'src/logger/logger.service';
+// import { Logger } from 'src/logger/logger.service';
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -16,8 +16,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const status = exception.getStatus();
     const { message, stack } = exception;
 
-    const logger = new Logger();
-    logger.error(`${status} ${message}`, stack);
+    // const logger = new Logger();
+    // logger.error(`${status} ${message}`, stack);
     console.log('CUSTOM ERROR HANDLING');
     response.status(status).json({
       statusCode: status,

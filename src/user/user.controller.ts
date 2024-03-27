@@ -12,7 +12,6 @@ import {
   Put,
 } from '@nestjs/common';
 import { StatusCodes } from 'http-status-codes';
-import { Logger } from 'src/logger/logger.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { UserService } from './user.service';
@@ -23,10 +22,9 @@ import { UserService } from './user.service';
 @Controller('user')
 export class UserController {
   constructor(
-    private readonly userService: UserService,
-    private logger: Logger,
+    private readonly userService: UserService, // private logger: Logger,
   ) {
-    this.logger.setContext('CatsService');
+    // this.logger.setContext('CatsService');
   }
 
   @Post()
