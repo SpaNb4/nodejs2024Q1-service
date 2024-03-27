@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
+import { compare, hash } from 'bcrypt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { RefreshResponse, SignInResponse, TokenPayload } from './types';
 
@@ -19,7 +20,9 @@ export class AuthService {
       throw new ForbiddenException();
     }
 
-    if (user?.password !== password) {
+    const isPasswordValid = await compare(password, user.password);
+
+    if (!isPasswordValid) {
       throw new ForbiddenException();
     }
 
@@ -36,10 +39,12 @@ export class AuthService {
   }
 
   async signUp(login: string, password: string): Promise<User> {
+    const hashedPassword = await hash(password, Number(process.env.CRYPT_SALT));
+
     return await this.prisma.user.create({
       data: {
         login,
-        password,
+        password: hashedPassword,
       },
     });
   }
@@ -57,10 +62,6 @@ export class AuthService {
       const user = await this.prisma.user.findUnique({
         where: { id: payload.userId },
       });
-
-      if (!user) {
-        throw new UnauthorizedException();
-      }
 
       const newPayload: TokenPayload = { userId: user.id, login: user.login };
 
