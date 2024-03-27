@@ -40,10 +40,6 @@ export class UserController {
 
   @Get()
   async findAll() {
-    throw 111;
-    // You can call all the default methods
-    this.logger.log('About to return cats!');
-
     const users = await this.userService.findAll();
 
     // TODO find a better way to handle this
