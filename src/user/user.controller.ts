@@ -68,9 +68,8 @@ export class UserController {
       throw new NotFoundException('User not found');
     }
 
-    const { password: currentUserPassword } = await this.userService.findOne(
-      id,
-    );
+    const { password: currentUserPassword } =
+      await this.userService.findOne(id);
 
     if (updatePasswordDto.oldPassword !== currentUserPassword) {
       throw new ForbiddenException('Forbidden, old password is incorrect');

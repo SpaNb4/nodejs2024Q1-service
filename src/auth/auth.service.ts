@@ -11,7 +11,10 @@ import { RefreshResponse, SignInResponse, TokenPayload } from './types';
 
 @Injectable()
 export class AuthService {
-  constructor(private prisma: PrismaService, private jwtService: JwtService) {}
+  constructor(
+    private prisma: PrismaService,
+    private jwtService: JwtService,
+  ) {}
 
   async signIn(login: string, password: string): Promise<SignInResponse> {
     const user = await this.prisma.user.findFirst({ where: { login } });
@@ -55,9 +58,8 @@ export class AuthService {
     }
 
     try {
-      const payload: TokenPayload = await this.jwtService.verifyAsync(
-        refreshToken,
-      );
+      const payload: TokenPayload =
+        await this.jwtService.verifyAsync(refreshToken);
 
       const user = await this.prisma.user.findUnique({
         where: { id: payload.userId },
