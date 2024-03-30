@@ -21,11 +21,7 @@ import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
-  constructor(
-    private readonly userService: UserService, // private logger: Logger,
-  ) {
-    // this.logger.setContext('CatsService');
-  }
+  constructor(private readonly userService: UserService) {}
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
@@ -38,6 +34,7 @@ export class UserController {
 
   @Get()
   async findAll() {
+    await Promise.reject(new Error('test'));
     const users = await this.userService.findAll();
 
     // TODO find a better way to handle this

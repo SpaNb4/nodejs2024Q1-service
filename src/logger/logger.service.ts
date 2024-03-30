@@ -1,8 +1,7 @@
-import { ConsoleLogger, Injectable, Scope } from '@nestjs/common';
+import { ConsoleLogger } from '@nestjs/common';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
-@Injectable({ scope: Scope.TRANSIENT })
 export class Logger extends ConsoleLogger {
   error(message: any, trace: string) {
     const timestamp = new Date().toISOString();

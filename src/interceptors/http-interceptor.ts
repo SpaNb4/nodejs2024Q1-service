@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-// import { Logger } from 'src/logger/logger.service';
+import { Logger } from 'src/logger/logger.service';
 
 @Injectable()
 export class HttpInterceptor implements NestInterceptor {
@@ -15,13 +15,13 @@ export class HttpInterceptor implements NestInterceptor {
     const request = httpContext.getRequest();
     const { url, body, query } = request;
 
-    // const logger = new Logger();
+    const logger = new Logger();
 
     return next.handle().pipe(
       tap(() => {
-        // logger.log(
-        //   `${url} body=${JSON.stringify(body)} query=${JSON.stringify(query)}`,
-        // );
+        logger.log(
+          `${url} body=${JSON.stringify(body)} query=${JSON.stringify(query)}`,
+        );
       }),
     );
   }

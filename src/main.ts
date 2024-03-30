@@ -5,9 +5,10 @@ import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import * as YAML from 'yaml';
 import { AppModule } from './app.module';
-// import { Logger } from './logger/logger.service';
-// import { HttpExceptionFilter } from './filters/http-exception.filter';
-// import { HttpInterceptor } from './interceptors/http-interceptor';
+import { HttpExceptionFilter } from './filters/http-exception.filter';
+import { HttpInterceptor } from './interceptors/http-interceptor';
+import { addErrorHandling } from './logger/error-handling';
+import { Logger } from './logger/logger.service';
 
 // Temporary fix for BigInt serialization
 // https://github.com/expressjs/express/issues/4453
@@ -30,11 +31,12 @@ async function bootstrap() {
     bufferLogs: true,
   });
 
-  // app.useLogger(app.get(Logger));
+  app.useLogger(app.get(Logger));
 
-  // app.useGlobalInterceptors(new HttpInterceptor());
-  // app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalInterceptors(new HttpInterceptor());
+  app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  addErrorHandling();
 
   const file = await fs.readFile(
     path.join(__dirname, '../doc/api.yaml'),
@@ -43,6 +45,14 @@ async function bootstrap() {
   const swaggerDocument = YAML.parse(file);
 
   SwaggerModule.setup('api', app, swaggerDocument);
+
+  // Unhandled error
+  // throw new Error('Test error');
+
+  // Uncatched error
+  // setTimeout(() => {
+  //   throw new Error('Another error');
+  // }, 1000);
 
   await app.listen(port);
 }
