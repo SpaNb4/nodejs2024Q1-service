@@ -1,14 +1,14 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule } from '@nestjs/swagger';
+import 'dotenv/config';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import * as YAML from 'yaml';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { HttpInterceptor } from './interceptors/http-interceptor';
-import { addErrorHandling } from './logger/error-handling';
-import { Logger } from './logger/logger.service';
+import { LoggerService } from './logger/logger.service';
 
 // Temporary fix for BigInt serialization
 // https://github.com/expressjs/express/issues/4453
@@ -22,8 +22,6 @@ BigInt.prototype.toJSON = function () {
   return Number(this.toString());
 };
 
-import 'dotenv/config';
-
 const port = process.env.BACKEND_PORT || 4000;
 
 async function bootstrap() {
@@ -31,12 +29,12 @@ async function bootstrap() {
     bufferLogs: true,
   });
 
-  app.useLogger(app.get(Logger));
+  const loggerService = app.get(LoggerService);
 
-  app.useGlobalInterceptors(new HttpInterceptor());
-  app.useGlobalFilters(new HttpExceptionFilter());
+  app.useLogger(loggerService);
+  app.useGlobalInterceptors(new HttpInterceptor(loggerService));
+  app.useGlobalFilters(new HttpExceptionFilter(loggerService));
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
-  addErrorHandling();
 
   const file = await fs.readFile(
     path.join(__dirname, '../doc/api.yaml'),

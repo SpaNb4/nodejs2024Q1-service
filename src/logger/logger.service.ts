@@ -1,8 +1,9 @@
-import { ConsoleLogger, LogLevel } from '@nestjs/common';
+import { ConsoleLogger, Injectable, LogLevel } from '@nestjs/common';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
-export class Logger extends ConsoleLogger {
+@Injectable()
+export class LoggerService extends ConsoleLogger {
   private logLevels = ['verbose', 'debug', 'log', 'warn', 'error', 'fatal'];
   private currentLogLevel: LogLevel;
   private errorLogFilePath: string;
@@ -13,6 +14,13 @@ export class Logger extends ConsoleLogger {
     super();
 
     this.currentLogLevel = (process.env.LOG_LEVEL as LogLevel) || 'fatal';
+    this.errorLogFilePath = path.join(__dirname, '../../logs/error.log');
+    this.commonLogFilePath = path.join(__dirname, '../../logs/common.log');
+    // Default to 10 kB
+    this.maxFileSize = parseInt(process.env.MAX_FILE_SIZE) * 1000 || 10 * 1000;
+
+    this.addErrorListeners();
+
     console.log('Current log level:', this.currentLogLevel);
     console.log(
       'Enabled log levels:',
@@ -21,10 +29,6 @@ export class Logger extends ConsoleLogger {
         .filter(Boolean)
         .join(', '),
     );
-    this.errorLogFilePath = path.join(__dirname, '../../logs/error.log');
-    this.commonLogFilePath = path.join(__dirname, '../../logs/common.log');
-    // Default to 10 kB
-    this.maxFileSize = parseInt(process.env.MAX_FILE_SIZE) * 1000 || 10 * 1000;
   }
 
   log(message: any) {
@@ -101,5 +105,19 @@ export class Logger extends ConsoleLogger {
     const currentIndex = this.logLevels.indexOf(this.currentLogLevel);
 
     return index <= currentIndex;
+  }
+
+  private addErrorListeners() {
+    process.on('uncaughtException', (error: Error) => {
+      this.error(`Uncaught Exception: ${error.message}`, error.stack);
+
+      process.exit(1);
+    });
+
+    process.on('unhandledRejection', (error: Error) => {
+      this.error(`Unhandled Rejection: ${error.message}`, error.stack);
+
+      process.exit(1);
+    });
   }
 }

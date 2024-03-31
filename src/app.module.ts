@@ -5,7 +5,7 @@ import { ArtistModule } from './artist/artist.module';
 import { AuthGuard } from './auth/auth.guard';
 import { AuthModule } from './auth/auth.module';
 import { FavoritesModule } from './favorites/favorites.module';
-import { Logger } from './logger/logger.service';
+import { LoggerModule } from './logger/logger.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { TrackModule } from './track/track.module';
 import { UserModule } from './user/user.module';
@@ -19,13 +19,13 @@ import { UserModule } from './user/user.module';
     FavoritesModule,
     PrismaModule,
     AuthModule,
+    LoggerModule,
   ],
   providers: [
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
     },
-    Logger,
   ],
 })
 export class AppModule {}

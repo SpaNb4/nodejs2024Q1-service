@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { Logger } from 'src/logger/logger.service';
+import { LoggerService } from 'src/logger/logger.service';
 
 interface DataToLog {
   fieldName: string;
@@ -24,6 +24,8 @@ const formatData = (dataToLog: DataToLog[]) => {
 
 @Injectable()
 export class HttpInterceptor implements NestInterceptor {
+  constructor(private loggerService: LoggerService) {}
+
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const httpContext = context.switchToHttp();
     const request = httpContext.getRequest();
@@ -31,18 +33,16 @@ export class HttpInterceptor implements NestInterceptor {
     const { url, body, query } = request;
     const { statusCode } = response;
 
-    const logger = new Logger();
-
     return next.handle().pipe(
       tap((data) => {
-        logger.log(
+        this.loggerService.log(
           `REQUEST: ${formatData([
             { fieldName: 'url', fieldValue: url },
             { fieldName: 'body', fieldValue: body },
             { fieldName: 'query', fieldValue: query },
           ])}`,
         );
-        logger.log(
+        this.loggerService.log(
           `RESPONSE: ${formatData([
             { fieldName: 'statusCode', fieldValue: statusCode },
             { fieldName: 'data', fieldValue: data },
