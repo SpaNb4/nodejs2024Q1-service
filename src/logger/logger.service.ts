@@ -3,7 +3,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 
 export class Logger extends ConsoleLogger {
-  private logLevels = ['log', 'error', 'warn', 'debug', 'verbose', 'fatal'];
+  private logLevels = ['verbose', 'debug', 'log', 'warn', 'error', 'fatal'];
   private currentLogLevel: LogLevel;
   private errorLogFilePath: string;
   private commonLogFilePath: string;
@@ -12,7 +12,15 @@ export class Logger extends ConsoleLogger {
   constructor() {
     super();
 
-    this.currentLogLevel = (process.env.LOG_LEVEL as LogLevel) || 'log';
+    this.currentLogLevel = (process.env.LOG_LEVEL as LogLevel) || 'fatal';
+    console.log('Current log level:', this.currentLogLevel);
+    console.log(
+      'Enabled log levels:',
+      this.logLevels
+        .map((level: LogLevel) => (this.shouldLog(level) ? level : null))
+        .filter(Boolean)
+        .join(', '),
+    );
     this.errorLogFilePath = path.join(__dirname, '../../logs/error.log');
     this.commonLogFilePath = path.join(__dirname, '../../logs/common.log');
     // Default to 10 kB
