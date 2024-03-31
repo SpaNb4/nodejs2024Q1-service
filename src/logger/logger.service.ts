@@ -1,39 +1,97 @@
-import { ConsoleLogger } from '@nestjs/common';
+import { ConsoleLogger, LogLevel } from '@nestjs/common';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
 export class Logger extends ConsoleLogger {
-  error(message: any, trace: string) {
-    const timestamp = new Date().toISOString();
+  private logLevels = ['log', 'error', 'warn', 'debug', 'verbose', 'fatal'];
+  private currentLogLevel: LogLevel;
+  private errorLogFilePath: string;
+  private commonLogFilePath: string;
+  private maxFileSize: number;
 
-    fs.appendFileSync(
-      path.join(__dirname, '../../logs/error.log'),
-      `${timestamp} - ${message}\n${trace}\n`,
-    );
+  constructor() {
+    super();
 
-    super.error(message, trace);
+    this.currentLogLevel = (process.env.LOG_LEVEL as LogLevel) || 'log';
+    this.errorLogFilePath = path.join(__dirname, '../../logs/error.log');
+    this.commonLogFilePath = path.join(__dirname, '../../logs/common.log');
+    // Default to 10 kB
+    this.maxFileSize = parseInt(process.env.MAX_FILE_SIZE) * 1000 || 10 * 1000;
   }
 
   log(message: any) {
-    const timestamp = new Date().toISOString();
+    if (this.shouldLog('log')) {
+      this.logToFile('log', message);
 
-    fs.appendFileSync(
-      path.join(__dirname, '../../logs/app.log'),
-      `${timestamp} - ${message}\n`,
-    );
+      super.log(message);
+    }
+  }
 
-    super.log(message);
+  fatal(message: any) {
+    if (this.shouldLog('fatal')) {
+      this.logToFile('fatal', message);
+
+      super.log(message);
+    }
+  }
+
+  error(message: any, trace: string) {
+    if (this.shouldLog('error')) {
+      this.logToFile('error', message);
+
+      super.error(message, trace);
+    }
   }
 
   warn(message: any) {
-    super.warn(message);
+    if (this.shouldLog('warn')) {
+      this.logToFile('warn', message);
+
+      super.warn(message);
+    }
   }
 
   debug(message: any) {
-    super.debug(message);
+    if (this.shouldLog('debug')) {
+      this.logToFile('debug', message);
+
+      super.debug(message);
+    }
   }
 
   verbose(message: any) {
-    super.verbose(message);
+    if (this.shouldLog('verbose')) {
+      this.logToFile('verbose', message);
+
+      super.verbose(message);
+    }
+  }
+
+  private logToFile(level: LogLevel, message: string) {
+    const timestamp = new Date().toISOString();
+    const logFilePath =
+      level === 'error' || level === 'fatal'
+        ? this.errorLogFilePath
+        : this.commonLogFilePath;
+
+    fs.mkdirSync(path.dirname(logFilePath), { recursive: true });
+
+    fs.appendFileSync(logFilePath, `${timestamp} - ${message}\n`);
+
+    const stats = fs.statSync(logFilePath);
+    const pathWithoutExtension = logFilePath.replace(/\.[^/.]+$/, '');
+
+    if (stats.size >= this.maxFileSize) {
+      const rotatedFilePath = `${pathWithoutExtension}.${timestamp.replace(/:/g, '-')}.log`;
+      fs.renameSync(logFilePath, rotatedFilePath);
+    }
+  }
+
+  private shouldLog(level: LogLevel): boolean {
+    const index = this.logLevels.indexOf(level);
+
+    const currentIndex = this.logLevels.indexOf(this.currentLogLevel);
+
+    return index <= currentIndex;
   }
 }

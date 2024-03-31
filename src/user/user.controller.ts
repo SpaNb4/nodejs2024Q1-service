@@ -34,7 +34,6 @@ export class UserController {
 
   @Get()
   async findAll() {
-    await Promise.reject(new Error('test'));
     const users = await this.userService.findAll();
 
     // TODO find a better way to handle this
