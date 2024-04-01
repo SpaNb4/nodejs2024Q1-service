@@ -6,9 +6,21 @@ import * as path from 'node:path';
 import * as YAML from 'yaml';
 import { AppModule } from './app.module';
 
+// Temporary fix for BigInt serialization
+// https://github.com/expressjs/express/issues/4453
+declare global {
+  interface BigInt {
+    toJSON(): number;
+  }
+}
+
+BigInt.prototype.toJSON = function () {
+  return Number(this.toString());
+};
+
 import 'dotenv/config';
 
-const port = process.env.PORT || 4000;
+const port = process.env.BACKEND_PORT || 4000;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -24,4 +36,4 @@ async function bootstrap() {
 
   await app.listen(port);
 }
-bootstrap();
+void bootstrap();
