@@ -7,6 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
 import { compare, hash } from 'bcrypt';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { UserService } from 'src/user/user.service';
 import { RefreshResponse, SignInResponse, TokenPayload } from './types';
 
 @Injectable()
@@ -14,6 +15,7 @@ export class AuthService {
   constructor(
     private prisma: PrismaService,
     private jwtService: JwtService,
+    private userService: UserService,
   ) {}
 
   async signIn(login: string, password: string): Promise<SignInResponse> {
@@ -46,11 +48,9 @@ export class AuthService {
   async signUp(login: string, password: string): Promise<User> {
     const hashedPassword = await hash(password, Number(process.env.CRYPT_SALT));
 
-    return await this.prisma.user.create({
-      data: {
-        login,
-        password: hashedPassword,
-      },
+    return await this.userService.create({
+      login,
+      password: hashedPassword,
     });
   }
 
