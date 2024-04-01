@@ -9,7 +9,7 @@ import { AuthService } from './auth.service';
     UserModule,
     JwtModule.register({
       global: true,
-      secret: '2',
+      secret: process.env.JWT_SECRET_KEY,
     }),
   ],
   providers: [AuthService],
