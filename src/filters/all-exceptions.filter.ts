@@ -27,14 +27,15 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     const responseBody = {
       statusCode: httpStatus,
+      method: ctx.getRequest().method,
+      url: httpAdapter.getRequestUrl(ctx.getRequest()),
       timestamp: new Date().toISOString(),
-      path: httpAdapter.getRequestUrl(ctx.getRequest()),
     };
 
     const { stack } = exception as Error;
 
     this.loggerService.error(
-      `Exception Filter:\n${JSON.stringify(responseBody, null, 2)}`,
+      `[Exception Filter] ${JSON.stringify(responseBody)}`,
       stack,
     );
 

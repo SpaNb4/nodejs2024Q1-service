@@ -88,7 +88,10 @@ export class LoggerService extends ConsoleLogger {
 
     fs.mkdirSync(path.dirname(logFilePath), { recursive: true });
 
-    fs.appendFileSync(logFilePath, `${timestamp} - ${message}\n`);
+    fs.appendFileSync(
+      logFilePath,
+      `${timestamp} - ${level.toUpperCase()} ${message}\n`,
+    );
 
     const stats = fs.statSync(logFilePath);
     const pathWithoutExtension = logFilePath.replace(/\.[^/.]+$/, '');
@@ -109,13 +112,13 @@ export class LoggerService extends ConsoleLogger {
 
   private addErrorListeners() {
     process.on('uncaughtException', (error: Error) => {
-      this.error(`Uncaught Exception: ${error.message}`, error.stack);
+      this.error(`[Uncaught Exception] ${error.message}`, error.stack);
 
       process.exit(1);
     });
 
     process.on('unhandledRejection', (error: Error) => {
-      this.error(`Unhandled Rejection: ${error.message}`, error.stack);
+      this.error(`[Unhandled Rejection] ${error.message}`, error.stack);
 
       process.exit(1);
     });

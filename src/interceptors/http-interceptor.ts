@@ -17,9 +17,9 @@ const formatData = (dataToLog: DataToLog[]) => {
   return dataToLog
     .map(
       ({ fieldName, fieldValue }) =>
-        `${fieldName}: ${JSON.stringify(fieldValue, null, 2)}`,
+        `${fieldName}: ${JSON.stringify(fieldValue)}`,
     )
-    .join('\n');
+    .join(' ');
 };
 
 @Injectable()
@@ -36,14 +36,14 @@ export class HttpInterceptor implements NestInterceptor {
     return next.handle().pipe(
       tap((data) => {
         this.loggerService.log(
-          `REQUEST: ${formatData([
+          `[HttpInterceptor Request] ${formatData([
             { fieldName: 'url', fieldValue: url },
             { fieldName: 'body', fieldValue: body },
             { fieldName: 'query', fieldValue: query },
           ])}`,
         );
         this.loggerService.log(
-          `RESPONSE: ${formatData([
+          `[HttpInterceptor Response] ${formatData([
             { fieldName: 'statusCode', fieldValue: statusCode },
             { fieldName: 'data', fieldValue: data },
           ])}`,
