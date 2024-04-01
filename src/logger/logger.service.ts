@@ -13,7 +13,7 @@ export class LoggerService extends ConsoleLogger {
   constructor() {
     super();
 
-    this.currentLogLevel = (process.env.LOG_LEVEL as LogLevel) || 'fatal';
+    this.currentLogLevel = (process.env.LOG_LEVEL as LogLevel) || 'log';
     this.errorLogFilePath = path.join(__dirname, '../../logs/error.log');
     this.commonLogFilePath = path.join(__dirname, '../../logs/common.log');
     // Default to 10 kB
@@ -104,7 +104,7 @@ export class LoggerService extends ConsoleLogger {
 
     const currentIndex = this.logLevels.indexOf(this.currentLogLevel);
 
-    return index <= currentIndex;
+    return index >= currentIndex;
   }
 
   private addErrorListeners() {
