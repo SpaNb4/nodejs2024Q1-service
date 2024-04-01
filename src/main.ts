@@ -1,5 +1,5 @@
 import { ValidationPipe } from '@nestjs/common';
-import { NestFactory, Reflector } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory, Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { SwaggerModule } from '@nestjs/swagger';
 import 'dotenv/config';
@@ -8,7 +8,7 @@ import * as path from 'node:path';
 import * as YAML from 'yaml';
 import { AppModule } from './app.module';
 import { AuthGuard } from './auth/auth.guard';
-import { HttpExceptionFilter } from './filters/http-exception.filter';
+import { AllExceptionsFilter } from './filters/all-exceptions.filter';
 import { HttpInterceptor } from './interceptors/http-interceptor';
 import { LoggerService } from './logger/logger.service';
 
@@ -34,11 +34,12 @@ async function bootstrap() {
   const loggerService = app.get(LoggerService);
   const jwtService = app.get(JwtService);
   const reflector = app.get(Reflector);
+  const adapterHost = app.get(HttpAdapterHost);
 
   app.useLogger(loggerService);
   app.useGlobalInterceptors(new HttpInterceptor(loggerService));
-  app.useGlobalFilters(new HttpExceptionFilter(loggerService));
-  app.useGlobalGuards(new AuthGuard(jwtService, reflector)); // Add the reflector argument
+  app.useGlobalFilters(new AllExceptionsFilter(adapterHost, loggerService));
+  app.useGlobalGuards(new AuthGuard(jwtService, reflector));
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
   const file = await fs.readFile(

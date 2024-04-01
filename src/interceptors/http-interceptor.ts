@@ -24,7 +24,7 @@ const formatData = (dataToLog: DataToLog[]) => {
 
 @Injectable()
 export class HttpInterceptor implements NestInterceptor {
-  constructor(private loggerService: LoggerService) {}
+  constructor(private readonly loggerService: LoggerService) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const httpContext = context.switchToHttp();
