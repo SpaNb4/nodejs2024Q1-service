@@ -23,5 +23,6 @@ module.exports = {
     '@typescript-eslint/no-floating-promises': ['error'],
     'require-await': 'off',
     '@typescript-eslint/require-await': 'error',
+    '@typescript-eslint/no-unused-vars': 'warn',
   },
 };

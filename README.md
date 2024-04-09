@@ -18,7 +18,11 @@ git clone git@github.com:SpaNb4/nodejs2024Q1-service.git
 npm ci
 ```
 
-## Running the application
+## You can run the application in two ways:
+
+### Using Docker for both the application and the database
+
+#### Running the application and the database
 
 ```
 docker compose up
@@ -26,10 +30,36 @@ docker compose up
 
 By default, the application will run on port 4000, in development mode, so it will automatically restart when you make changes to the code in the `src` directory.
 
-## Stopping the application
+#### Stopping the application and the database
 
 ```
 docker compose down
+```
+
+### Using Docker for the database and running the application locally
+
+#### Changing the environment variable
+
+```
+POSTGRES_HOST=localhost
+```
+
+#### Running the database
+
+```
+docker compose up -d postgres
+```
+
+#### Migrating the database
+
+```
+npx prisma migrate deploy
+```
+
+#### Running the application locally
+
+```
+npm run start:dev
 ```
 
 ## Environment variables
@@ -62,27 +92,27 @@ After application running open new terminal and enter:
 
 - To run all tests without authorization
 
-  ```
-  npm run test
-  ```
+```
+npm run test
+```
 
 - To run only one of all test suites
 
-  ```
-  npm run test -- <path to suite>
-  ```
+```
+npm run test -- <path to suite>
+```
 
 - To run all test with authorization
 
-  ```
-  npm run test:auth
-  ```
+```
+npm run test:auth
+```
 
 - To run only specific test suite with authorization
 
-  ```
-  npm run test:auth -- <path to suite>
-  ```
+```
+npm run test:auth -- <path to suite>
+```
 
 ### Auto-fix and format
 
